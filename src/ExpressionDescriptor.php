@@ -172,24 +172,24 @@ class ExpressionDescriptor
                 return $s;
             },
             function ($s) {
-                return $this->translate('Every{0}Seconds', ['0' => $s]);
+                return $this->translate('Every{0}Seconds', [$s]);
             },
             function () {
                 return $this->translate('Seconds{0}Through{1}PastTheMinute');
             },
             function ($s) {
                 if (is_int($s) || ctype_alnum($s)) {
-                    return $s == "0" ? ''
+                    return $s == '0' ? ''
                         : ($s < 20)
                             ? $this->translate('At{0}SecondsPastTheMinute')
-                            : $this->translate('At{0}SecondsPastTheMinuteGt20') ?? $this->translate('At{0}SecondsPastTheMinute');
+                            : $this->translate('At{0}SecondsPastTheMinuteGt20', [], false) ?? $this->translate('At{0}SecondsPastTheMinute');
 
                 } else {
                     return $this->translate('At{0}SecondsPastTheMinute');
                 }
             },
             function () {
-                return $this->translate('ComaMin{0}ThroughMin{1}') ?? $this->translate('Coma{0}Through{1}');
+                return $this->translate('ComaMin{0}ThroughMin{1}', [], false) ?? $this->translate('Coma{0}Through{1}');
             }
         );
 
@@ -209,14 +209,14 @@ class ExpressionDescriptor
                 return $s;
             },
             function ($s) {
-                return $this->translate('Every{0}Minutes', ['0' => $s]);
+                return $this->translate('Every{0}Minutes', [$s]);
             },
             function () {
                 return $this->translate('Minutes{0}Through{1}PastTheHour');
             },
             function ($s) {
                 if (ctype_alnum($s)) {
-                    return $s == "0" ? '' : $this->translate('At{0}MinutesPastTheHour');
+                    return $s == '0' ? '' : $this->translate('At{0}MinutesPastTheHour');
                 } else {
                     return $this->translate('At{0}MinutesPastTheHour');
                 }
@@ -241,7 +241,7 @@ class ExpressionDescriptor
                 return $this->formatTime($s, '0');
             },
             function ($s) {
-                return $this->translate('Every{0}Hours', ['0' => $s]);
+                return $this->translate('Every{0}Hours', [$s]);
             },
             function () {
                 return $this->translate('Between{0}And{1}');
@@ -423,13 +423,13 @@ class ExpressionDescriptor
         $description = $this->getSegmentDescription($this->expression['year'], '',
             function ($s) {
                 if (preg_match('#^\d+$#', $s)) {
-                    return (new DateTime("$s year"))->format('Y');
+                    return (new DateTime("$s-01-01"))->format('Y');
                 }
 
                 return $s;
             },
             function ($s) {
-                return $this->translate('ComaEvery{0}Years', ['0' => $s]);
+                return $this->translate('ComaEvery{0}Years', [$s]);
             },
             function () {
                 return $this->translate('Coma{0}Through{1}');
@@ -484,7 +484,7 @@ class ExpressionDescriptor
                 $betweenSegmentDescription = $this->generateBetweenSegmentDescription($segments[0], $getBetweenDescriptionFormat, $getSingleItemDescription);
 
                 if (strpos($betweenSegmentDescription, ',') !== 0) {
-                    $description .= ", ";
+                    $description .= ', ';
                 }
 
                 $description .= $betweenSegmentDescription;
@@ -510,7 +510,7 @@ class ExpressionDescriptor
                 }
 
                 if ($i > 0 && count($segments) > 1 && ($i == count($segments) - 1 || count($segments) == 2)) {
-                    $descriptionContent .= $this->translate("SpaceAndSpace");
+                    $descriptionContent .= $this->translate('SpaceAndSpace');
                 }
 
                 if (strpos($segments[$i], '-') !== false) {
@@ -563,7 +563,7 @@ class ExpressionDescriptor
         $period = '';
 
         if (!$this->use24HourTimeFormat) {
-            $period = $this->translate($hour >= 12 ? "PMPeriod" : "AMPeriod");
+            $period = $this->translate($hour >= 12 ? 'PMPeriod' : 'AMPeriod');
 
             if (!empty($period)) {
                 $period = ' ' . $period;
@@ -580,15 +580,16 @@ class ExpressionDescriptor
             $second = ':' . str_pad($second, 2, '0', STR_PAD_LEFT);
         }
 
-        return sprintf("%s:%s%s%s", str_pad($hour, 2, '0', STR_PAD_LEFT), str_pad($minute, 2, '0', STR_PAD_LEFT), $second, $period);
+        return sprintf('%s:%s%s%s', str_pad($hour, 2, '0', STR_PAD_LEFT), str_pad($minute, 2, '0', STR_PAD_LEFT), $second, $period);
     }
 
     /**
      * @param string $source
      * @param array $params
-     * @return string
+     * @param bool $forceTranslate
+     * @return string|null
      */
-    protected function translate(string $source, array $params = []): string
+    protected function translate(string $source, array $params = [], bool $forceTranslate = true)
     {
         if ($this->translator !== null) {
             return call_user_func($this->translator, $source, $params);
@@ -600,7 +601,7 @@ class ExpressionDescriptor
         }
 
         if (!isset($translations[$this->language][$source])) {
-            return $source;
+            return $forceTranslate ? $source : null;
         }
 
         if (empty($params)) {
