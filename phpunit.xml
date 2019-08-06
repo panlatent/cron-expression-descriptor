@@ -10,13 +10,20 @@
          verbose="true">
     <testsuites>
         <testsuite name="default">
-            <directory suffix="Test.php">tests</directory>
+            <directory>tests</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">src</directory>
+            <exclude>
+                <directory>./vendor</directory>
+                <directory>./tests</directory>
+            </exclude>
         </whitelist>
     </filter>
+    <logging>
+        <log type="coverage-clover" target="coverage.xml"/>
+    </logging>
 </phpunit>

@@ -11,7 +11,7 @@ before_script:
   - travis_retry composer install --prefer-source --no-interaction --dev
 
 script: 
-  - vendor/bin/codecept run --coverage --coverage-xml
+  - vendor/bin/phpunit --verbose
 
 after_script:
   - vendor/bin/php-coveralls -v

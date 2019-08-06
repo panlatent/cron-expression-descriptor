@@ -1,2 +1,2 @@
-coverage_clover: tests/_output/coverage.xml
+coverage_clover: coverage.xml
 json_path: coveralls-upload.json
