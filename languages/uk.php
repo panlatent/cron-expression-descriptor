@@ -1,0 +1,55 @@
+<?php
+/**
+ * Cron Expression Descriptor
+ *
+ * @link      https://github.com/panlatent/cron-expression-descriptor
+ * @copyright Copyright (c) 2019 panlatent@gmail.com
+ */
+
+return [
+    'EveryMinute' => 'щохвилини',
+    'EveryHour' => 'щогодини',
+    'AnErrorOccuredWhenGeneratingTheExpressionD' => 'ВІдбулася помилка підчас генерації опису. Перевірта правильність написання cron виразу.',
+    'AtSpace' => 'О ',
+    'EveryMinuteBetween{0}And{1}' => 'Щохвилини між {0} та {1}',
+    'At' => 'О',
+    'SpaceAnd' => ' та',
+    'EverySecond' => 'Щосекунди',
+    'Every{0}Seconds' => 'кожні {0} секунд',
+    'Seconds{0}Through{1}PastTheMinute' => 'з {0} по {1} секунду',
+    'At{0}SecondsPastTheMinute' => 'о {0} секунді',
+    'Every{0}Minutes' => 'кожні {0} хвилин',
+    'Minutes{0}Through{1}PastTheHour' => 'з {0} по {1} хвилину',
+    'At{0}MinutesPastTheHour' => 'о {0} хвилині',
+    'Every{0}Hours' => 'кожні {0} годин',
+    'Between{0}And{1}' => 'між {0} та {1}',
+    'At{0}' => 'о {0}',
+    'ComaEveryDay' => ', щоденно',
+    'ComaEvery{0}DaysOfTheWeek' => ', кожен {0} день тижня',
+    'Coma{0}Through{1}' => ', {0} по {1}',
+    'First' => 'перший',
+    'Second' => 'другий',
+    'Third' => 'третій',
+    'Fourth' => 'четвертий',
+    'Fifth' => 'п\'ятий',
+    'ComaOnThe' => ', в ',
+    'Space{0}OfTheMonth' => ' {0} місяця',
+    'ComaOnTheLast{0}OfTheMonth' => ', в останній {0} місяця',
+    'ComaOnlyOn{0}' => ', тільки в {0}',
+    'ComaEvery{0}Months' => ', кожен {0} місяць',
+    'ComaOnlyIn{0}' => ', тільки в {0}',
+    'ComaOnTheLastDayOfTheMonth' => ', в останній день місяця',
+    'ComaOnTheLastWeekdayOfTheMonth' => ', в останній будень місяця',
+    'FirstWeekday' => 'перший будень',
+    'WeekdayNearestDay{0}' => 'будень найближчий до {0} дня',
+    'ComaOnThe{0}OfTheMonth' => ', в {0} місяця',
+    'ComaEvery{0}Days' => ', кожен {0} день',
+    'ComaBetweenDay{0}And{1}OfTheMonth' => ', між {0} та {1} днями місяця',
+    'ComaOnDay{0}OfTheMonth' => ', на {0} день місяця',
+    'SpaceAndSpace' => ' та ',
+    'ComaEveryMinute' => ', щохвилини',
+    'ComaEveryHour' => ', щогодини',
+    'ComaEvery{0}Years' => ', кожні {0} роки',
+    'CommaStarting{0}' => ', початок {0}',
+    'CommaDaysBeforeTheLastDayOfTheMonth' => ', {0} днів до останнього дня місяця',
+];

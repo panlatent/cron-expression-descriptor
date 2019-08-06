@@ -1,0 +1,55 @@
+<?php
+/**
+ * Cron Expression Descriptor
+ *
+ * @link      https://github.com/panlatent/cron-expression-descriptor
+ * @copyright Copyright (c) 2019 panlatent@gmail.com
+ */
+
+return [
+    'EveryMinute' => 'vsako minuto',
+    'EveryHour' => 'vsako uro',
+    'AnErrorOccuredWhenGeneratingTheExpressionD' => 'Pri generiranju opisa izraza je prišlo do napake. Preverite sintakso izraza cron.',
+    'AtSpace' => 'Ob ',
+    'EveryMinuteBetween{0}And{1}' => 'Vsako minuto od {0} do {1}',
+    'At' => 'Ob',
+    'SpaceAnd' => ' in',
+    'EverySecond' => 'vsako sekundo',
+    'Every{0}Seconds' => 'vsakih {0} sekund',
+    'Seconds{0}Through{1}PastTheMinute' => 'sekunde od {0} do {1}',
+    'At{0}SecondsPastTheMinute' => 'ob {0}. sekundi',
+    'Every{0}Minutes' => 'vsakih {0} minut',
+    'Minutes{0}Through{1}PastTheHour' => 'minute od {0} do {1}',
+    'At{0}MinutesPastTheHour' => 'ob {0}. minuti',
+    'Every{0}Hours' => 'vsakih {0} ur',
+    'Between{0}And{1}' => 'od {0} do {1}',
+    'At{0}' => 'ob {0}',
+    'ComaEveryDay' => ', vsak dan',
+    'ComaEvery{0}DaysOfTheWeek' => ', vsakih {0} dni v tednu',
+    'Coma{0}Through{1}' => ', od {0} do {1}',
+    'First' => 'prvi',
+    'Second' => 'drugi',
+    'Third' => 'tretji',
+    'Fourth' => 'četrti',
+    'Fifth' => 'peti',
+    'ComaOnThe' => ', ',
+    'Space{0}OfTheMonth' => ' {0} v mesecu',
+    'ComaOnTheLast{0}OfTheMonth' => ', zadnji {0} v mesecu',
+    'ComaOnlyOn{0}' => ', samo v {0}',
+    'ComaEvery{0}Months' => ', vsakih {0} mesecev',
+    'ComaOnlyIn{0}' => ', samo v {0}',
+    'ComaOnTheLastDayOfTheMonth' => ', zadnji dan v mesecu',
+    'ComaOnTheLastWeekdayOfTheMonth' => ', zadnji delovni dan v mesecu',
+    'FirstWeekday' => 'prvi delovni dan',
+    'WeekdayNearestDay{0}' => 'delovni dan, najbližji {0}. dnevu',
+    'ComaOnThe{0}OfTheMonth' => ', {0} v mesecu',
+    'ComaEvery{0}Days' => ', vsakih {0} dni',
+    'ComaBetweenDay{0}And{1}OfTheMonth' => ', od {0}. do {1}. dne v mesecu',
+    'ComaOnDay{0}OfTheMonth' => ', {0}. dan v mesecu',
+    'SpaceAndSpace' => ' in ',
+    'ComaEveryMinute' => ', vsako minuto',
+    'ComaEveryHour' => ', vsako uro',
+    'ComaEvery{0}Years' => ', vsakih {0} let',
+    'CommaStarting{0}' => ', začenši {0}',
+    'CommaDaysBeforeTheLastDayOfTheMonth' => ', {0} dni pred koncem meseca',
+];

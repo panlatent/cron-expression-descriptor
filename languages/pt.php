@@ -1,0 +1,55 @@
+<?php
+/**
+ * Cron Expression Descriptor
+ *
+ * @link      https://github.com/panlatent/cron-expression-descriptor
+ * @copyright Copyright (c) 2019 panlatent@gmail.com
+ */
+
+return [
+    'AnErrorOccuredWhenGeneratingTheExpressionD' => 'Ocorreu um erro ao gerar a descrição da expressão Cron.',
+    'At' => 'às',
+    'AtSpace' => 'às ',
+    'At{0}' => 'Às {0}',
+    'At{0}MinutesPastTheHour' => 'aos {0} minutos da hora',
+    'At{0}SecondsPastTheMinute' => 'aos {0} segundos do minuto',
+    'Between{0}And{1}' => 'entre {0} e {1}',
+    'ComaBetweenDay{0}And{1}OfTheMonth' => ', entre os dias {0} e {1} do mês',
+    'ComaEveryDay' => ', a cada dia',
+    'ComaEveryHour' => ', a cada hora',
+    'ComaEveryMinute' => ', a cada minuto',
+    'ComaEvery{0}Days' => ', a cada {0} dias',
+    'ComaEvery{0}DaysOfTheWeek' => ', a cada {0} dias de semana',
+    'ComaEvery{0}Months' => ', a cada {0} meses',
+    'ComaOnDay{0}OfTheMonth' => ', no dia {0} do mês',
+    'ComaOnlyIn{0}' => ', somente em {0}',
+    'ComaOnlyOn{0}' => ', somente de {0}',
+    'ComaOnThe' => ', na ',
+    'ComaOnTheLastDayOfTheMonth' => ', no último dia do mês',
+    'ComaOnTheLastWeekdayOfTheMonth' => ', no último dia da semana do mês',
+    'ComaOnTheLast{0}OfTheMonth' => ', na última {0} do mês',
+    'ComaOnThe{0}OfTheMonth' => ', no {0} do mês',
+    'Coma{0}Through{1}' => ', de {0} a {1}',
+    'EveryHour' => 'a cada hora',
+    'EveryMinute' => 'a cada minuto',
+    'EveryMinuteBetween{0}And{1}' => 'a cada minuto entre {0} e {1}',
+    'EverySecond' => 'a cada segundo',
+    'Every{0}Hours' => 'a cada {0} horas',
+    'Every{0}Minutes' => 'a cada {0} minutos',
+    'Every{0}Seconds' => 'a cada {0} segundos',
+    'Fifth' => 'quinta',
+    'First' => 'primeira',
+    'FirstWeekday' => 'primeiro dia da semana',
+    'Fourth' => 'quarta',
+    'Minutes{0}Through{1}PastTheHour' => 'do minuto {0} até {1} de cada hora',
+    'Second' => 'segunda',
+    'Seconds{0}Through{1}PastTheMinute' => 'No segundo {0} até {1} de cada minuto',
+    'SpaceAnd' => ' e',
+    'SpaceAndSpace' => ' e ',
+    'Space{0}OfTheMonth' => ' {0} do mês',
+    'Third' => 'terceira',
+    'WeekdayNearestDay{0}' => 'dia da semana mais próximo do dia {0}',
+    'ComaEvery{0}Years' => ', a cada {0} anos',
+    'CommaStarting{0}' => ', iniciando {0}',
+    'CommaDaysBeforeTheLastDayOfTheMonth' => ', {0} dias antes do último dia do mês',
+];

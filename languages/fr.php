@@ -1,0 +1,57 @@
+<?php
+/**
+ * Cron Expression Descriptor
+ *
+ * @link      https://github.com/panlatent/cron-expression-descriptor
+ * @copyright Copyright (c) 2019 panlatent@gmail.com
+ */
+
+return [
+    'EveryMinute' => 'toutes les minutes',
+    'EveryHour' => 'toutes les heures',
+    'AnErrorOccuredWhenGeneratingTheExpressionD' => 'Une erreur est survenue en générant la description de l\'expression cron. Vérifiez sa syntaxe.',
+    'AtSpace' => 'À ',
+    'EveryMinuteBetween{0}And{1}' => 'Toutes les minutes entre {0} et {1}',
+    'At' => 'À',
+    'SpaceAnd' => ' et',
+    'EverySecond' => 'toutes les secondes',
+    'Every{0}Seconds' => 'toutes les {0} secondes',
+    'Seconds{0}Through{1}PastTheMinute' => 'les secondes entre {0} et {1} après la minute',
+    'At{0}SecondsPastTheMinute' => '{0} secondes après la minute',
+    'Every{0}Minutes' => 'toutes les {0} minutes',
+    'Minutes{0}Through{1}PastTheHour' => 'les minutes entre {0} et {1} après l\'heure',
+    'At{0}MinutesPastTheHour' => '{0} minutes après l\'heure',
+    'Every{0}Hours' => 'toutes les {0} heures',
+    'Between{0}And{1}' => 'de {0} à {1}',
+    'At{0}' => 'à {0}',
+    'ComaEveryDay' => ', tous les jours',
+    'ComaEvery{0}DaysOfTheWeek' => ', every {0} days of the week',
+    'Coma{0}Through{1}' => ', de {0} à {1}',
+    'First' => 'premier',
+    'Second' => 'second',
+    'Third' => 'troisième',
+    'Fourth' => 'quatrième',
+    'Fifth' => 'cinquième',
+    'ComaOnThe' => ', le ',
+    'Space{0}OfTheMonth' => ' {0} du mois',
+    'ComaOnTheLast{0}OfTheMonth' => ', le dernier {0} du mois',
+    'ComaOnlyOn{0}' => ', uniquement le {0}',
+    'ComaEvery{0}Months' => ', tous les {0} mois',
+    'ComaOnlyIn{0}' => ', uniquement en {0}',
+    'ComaOnTheLastDayOfTheMonth' => ', le dernier jour du mois',
+    'ComaOnTheLastWeekdayOfTheMonth' => ', le dernier jour ouvrable du mois',
+    'FirstWeekday' => 'premier jour ouvrable',
+    'WeekdayNearestDay{0}' => 'jour ouvrable le plus proche du {0}',
+    'ComaOnThe{0}OfTheMonth' => ', le {0} du mois',
+    'ComaEvery{0}Days' => ', tous les {0} jours',
+    'ComaBetweenDay{0}And{1}OfTheMonth' => ', du {0} au {1} du mois',
+    'ComaOnDay{0}OfTheMonth' => ', le {0} du mois',
+    'SpaceAndSpace' => ' et ',
+    'ComaEveryMinute' => ', toutes les minutes',
+    'ComaEveryHour' => ', toutes les heures',
+    'ComaEvery{0}Years' => ', tous les {0} ans',
+    'ComaDays{0}Through{1}' => ', du {0} au {1}',
+    'WeekSpaceAndSpace' => ' et le ',
+    'CommaStarting{0}' => ', départ {0}',
+    'CommaDaysBeforeTheLastDayOfTheMonth' => ', {0} jours avant le dernier jour du mois',
+];

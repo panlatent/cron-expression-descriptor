@@ -1,0 +1,56 @@
+<?php
+/**
+ * Cron Expression Descriptor
+ *
+ * @link      https://github.com/panlatent/cron-expression-descriptor
+ * @copyright Copyright (c) 2019 panlatent@gmail.com
+ */
+
+return [
+    'AnErrorOccuredWhenGeneratingTheExpressionD' => 'Ett fel inträffade under genereringen av utrycket. Kontrollera cron-syntaxen.',
+    'At' => 'På',
+    'AtSpace' => 'På ',
+    'At{0}' => 'på {0}',
+    'At{0}MinutesPastTheHour' => 'vid {0} minuter över',
+    'At{0}SecondsPastTheMinute' => 'efter {0} sekunder',
+    'Between{0}And{1}' => 'mellan {0} och {1}',
+    'ComaBetweenDay{0}And{1}OfTheMonth' => ', mellan dag {0} och {1} i månaden',
+    'ComaEveryDay' => ', varje dag',
+    'ComaEveryHour' => ', varje timma',
+    'ComaEveryMinute' => ', varje minut',
+    'ComaEvery{0}Days' => ', var {0}(:e/:a) dag',
+    'ComaEvery{0}DaysOfTheWeek' => ', var {0}(:e/:a) veckodag',
+    'ComaEvery{0}Months' => ', var {0}(:e/:a) månad',
+    'ComaEvery{0}Years' => ', var {0} år',
+    'ComaOnDay{0}OfTheMonth' => ', på dag {0} av månaden',
+    'ComaOnlyIn{0}' => ', bara i {0}',
+    'ComaOnlyOn{0}' => ', bara på {0}',
+    'ComaOnThe' => ', den ',
+    'ComaOnTheLastDayOfTheMonth' => ', på den sista dagen i månaden',
+    'ComaOnTheLastWeekdayOfTheMonth' => ', på den siste veckodagen i månaden',
+    'ComaOnTheLast{0}OfTheMonth' => ', på den sista {0} av månaden',
+    'ComaOnThe{0}OfTheMonth' => ', på den {0} av månaden',
+    'Coma{0}Through{1}' => ', {0} till och med {1}',
+    'EveryHour' => 'varje timma',
+    'EveryMinute' => 'varje minut',
+    'EveryMinuteBetween{0}And{1}' => 'varje minut mellan {0} och {1}',
+    'EverySecond' => 'varje sekund',
+    'Every{0}Hours' => 'upprepas efter {0} timmar',
+    'Every{0}Minutes' => 'upprepas efter {0} minuter',
+    'Every{0}Seconds' => 'upprepas efter {0} sekunder',
+    'Fifth' => 'femte',
+    'First' => 'första',
+    'FirstWeekday' => 'första dagen i veckan',
+    'Fourth' => 'fjärde',
+    'Minutes{0}Through{1}PastTheHour' => 'mellan minut {0} och {1} varje timma',
+    'Second' => 'sekund',
+    'Seconds{0}Through{1}PastTheMinute' => 'mellan sekund {0} och {1} varje minut',
+    'SpaceAnd' => ' och',
+    'SpaceAndSpace' => ' och ',
+    'Space{0}OfTheMonth' => ' {0} av månaden',
+    'Third' => 'tredje',
+    'WeekdayNearestDay{0}' => 'veckodag närmast dag {0}',
+    'CommaStarting{0}' => ', börjar {0}',
+    'At{0}MinutesPastTheHourGt20' => 'vid {0} minuter över',
+    'CommaDaysBeforeTheLastDayOfTheMonth' => ', {0} dagar före den sista dagen i månaden',
+];

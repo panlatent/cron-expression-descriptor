@@ -1,0 +1,55 @@
+<?php
+/**
+ * Cron Expression Descriptor
+ *
+ * @link      https://github.com/panlatent/cron-expression-descriptor
+ * @copyright Copyright (c) 2019 panlatent@gmail.com
+ */
+
+return [
+    'EveryMinute' => 'elke minuut',
+    'EveryHour' => 'elk uur',
+    'AnErrorOccuredWhenGeneratingTheExpressionD' => 'Er is een fout opgetreden bij het vertalen van de gegevens. Controleer de gegevens.',
+    'AtSpace' => 'Op ',
+    'EveryMinuteBetween{0}And{1}' => 'Elke minuut tussen {0} en {1}',
+    'At' => 'Op',
+    'SpaceAnd' => ' en',
+    'EverySecond' => 'elke seconde',
+    'Every{0}Seconds' => 'elke {0} seconden',
+    'Seconds{0}Through{1}PastTheMinute' => 'seconden {0} t/m {1} na de minuut',
+    'At{0}SecondsPastTheMinute' => 'op {0} seconden na de minuut',
+    'Every{0}Minutes' => 'elke {0} minuten',
+    'Minutes{0}Through{1}PastTheHour' => 'minuut {0} t/m {1} na het uur',
+    'At{0}MinutesPastTheHour' => 'op {0} minuten na het uur',
+    'Every{0}Hours' => 'elke {0} uur',
+    'Between{0}And{1}' => 'tussen {0} en {1}',
+    'At{0}' => 'op {0}',
+    'ComaEveryDay' => ', elke dag',
+    'ComaEvery{0}DaysOfTheWeek' => ', elke {0} dagen van de week',
+    'Coma{0}Through{1}' => ', {0} t/m {1}',
+    'First' => 'eerste',
+    'Second' => 'tweede',
+    'Third' => 'derde',
+    'Fourth' => 'vierde',
+    'Fifth' => 'vijfde',
+    'ComaOnThe' => ', op de ',
+    'Space{0}OfTheMonth' => ' {0} van de maand',
+    'ComaOnTheLast{0}OfTheMonth' => ', op de laatste {0} van de maand',
+    'ComaOnlyOn{0}' => ', alleen op {0}',
+    'ComaEvery{0}Months' => ', elke {0} maanden',
+    'ComaOnlyIn{0}' => ', alleen in {0}',
+    'ComaOnTheLastDayOfTheMonth' => ', op de laatste dag van de maand',
+    'ComaOnTheLastWeekdayOfTheMonth' => ', op de laatste werkdag van de maand',
+    'FirstWeekday' => 'eerste werkdag',
+    'WeekdayNearestDay{0}' => 'werkdag dichtst bij dag {0}',
+    'ComaOnThe{0}OfTheMonth' => ', op de {0} van de maand',
+    'ComaEvery{0}Days' => ', elke {0} dagen',
+    'ComaBetweenDay{0}And{1}OfTheMonth' => ', tussen dag {0} en {1} van de maand',
+    'ComaOnDay{0}OfTheMonth' => ', op dag {0} van de maand',
+    'SpaceAndSpace' => ' en ',
+    'ComaEveryMinute' => ', elke minuut',
+    'ComaEveryHour' => ', elk uur',
+    'ComaEvery{0}Years' => ', elke {0} jaren',
+    'CommaStarting{0}' => ', beginnend {0}',
+    'CommaDaysBeforeTheLastDayOfTheMonth' => ', {0} dagen vóór de laatste dag van de maand',
+];

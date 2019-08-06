@@ -1,0 +1,55 @@
+<?php
+/**
+ * Cron Expression Descriptor
+ *
+ * @link      https://github.com/panlatent/cron-expression-descriptor
+ * @copyright Copyright (c) 2019 panlatent@gmail.com
+ */
+
+return [
+    'EveryMinute' => '每分鐘',
+    'EveryHour' => '每小時',
+    'AnErrorOccuredWhenGeneratingTheExpressionD' => '產生正規表達式描述時發生了錯誤，請檢查 cron 表達式語法。',
+    'AtSpace' => '在 ',
+    'EveryMinuteBetween{0}And{1}' => '在 {0} 和 {1} 之間的每分鐘',
+    'At' => '在',
+    'SpaceAnd' => ' 和',
+    'EverySecond' => '每秒',
+    'Every{0}Seconds' => '每 {0} 秒',
+    'Seconds{0}Through{1}PastTheMinute' => '在每分鐘的 {0} 到 {1} 秒',
+    'At{0}SecondsPastTheMinute' => '在每分鐘的 {0} 秒',
+    'Every{0}Minutes' => '每 {0} 分鐘',
+    'Minutes{0}Through{1}PastTheHour' => '在每小時的 {0} 到 {1} 分鐘',
+    'At{0}MinutesPastTheHour' => '在每小時的 {0} 分',
+    'Every{0}Hours' => '每 {0} 小時',
+    'Between{0}And{1}' => '在 {0} 和 {1} 之間',
+    'At{0}' => '在 {0}',
+    'ComaEveryDay' => ', 每天',
+    'ComaEvery{0}DaysOfTheWeek' => ', 每週的每 {0} 天',
+    'Coma{0}Through{1}' => ', {0} 到 {1}',
+    'First' => '第一個',
+    'Second' => '第二個',
+    'Third' => '第三個',
+    'Fourth' => '第四個',
+    'Fifth' => '第五個',
+    'ComaOnThe' => ', 在 ',
+    'Space{0}OfTheMonth' => '{0} 每月',
+    'ComaOnTheLast{0}OfTheMonth' => ', 每月的最後一個 {0} ',
+    'ComaOnlyOn{0}' => ', 僅在 {0}',
+    'ComaEvery{0}Months' => ', 每 {0} 月',
+    'ComaOnlyIn{0}' => ', 僅在 {0}',
+    'ComaOnTheLastDayOfTheMonth' => ', 每月的最後一天',
+    'ComaOnTheLastWeekdayOfTheMonth' => ', 每月的最後一個平日',
+    'FirstWeekday' => '第一個平日',
+    'WeekdayNearestDay{0}' => '最接近 {0} 號的平日',
+    'ComaOnThe{0}OfTheMonth' => ', 每月的 {0} ',
+    'ComaEvery{0}Days' => ', 每 {0} 天',
+    'ComaBetweenDay{0}And{1}OfTheMonth' => ', 在每月的 {0} 和 {1} 號之間',
+    'ComaOnDay{0}OfTheMonth' => ', 每月的 {0} 號',
+    'SpaceAndSpace' => ' 和 ',
+    'ComaEveryMinute' => ', 每分鐘',
+    'ComaEveryHour' => ', 每小時',
+    'ComaEvery{0}Years' => ', 每 {0} 年',
+    'CommaStarting{0}' => ', 開始 {0}',
+    'CommaDaysBeforeTheLastDayOfTheMonth' => ', {0} 這個月的最後一天的前幾天',
+];

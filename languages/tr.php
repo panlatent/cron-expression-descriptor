@@ -1,0 +1,55 @@
+<?php
+/**
+ * Cron Expression Descriptor
+ *
+ * @link      https://github.com/panlatent/cron-expression-descriptor
+ * @copyright Copyright (c) 2019 panlatent@gmail.com
+ */
+
+return [
+    'EveryMinute' => 'her dakika',
+    'EveryHour' => 'her saat',
+    'AnErrorOccuredWhenGeneratingTheExpressionD' => 'İfade açıklamasını oluştururken bir hata oluştu. Cron ifadesini gözden geçirin.',
+    'AtSpace' => 'Saat ',
+    'EveryMinuteBetween{0}And{1}' => 'Saat {0} ve {1} arasındaki her dakika',
+    'At' => 'Saat',
+    'SpaceAnd' => ' ve',
+    'EverySecond' => 'her saniye',
+    'Every{0}Seconds' => 'her {0} saniyede bir',
+    'Seconds{0}Through{1}PastTheMinute' => 'dakikaların {0}. ve {1}. saniyeleri arası',
+    'At{0}SecondsPastTheMinute' => 'dakikaların {0}. saniyesinde',
+    'Every{0}Minutes' => 'her {0} dakikada bir',
+    'Minutes{0}Through{1}PastTheHour' => 'saatlerin {0}. ve {1}. dakikaları arası',
+    'At{0}MinutesPastTheHour' => 'saatlerin {0}. dakikasında',
+    'Every{0}Hours' => 'her {0} saatte',
+    'Between{0}And{1}' => '{0} ile {1} arasında',
+    'At{0}' => 'saat {0}',
+    'ComaEveryDay' => ', her gün',
+    'ComaEvery{0}DaysOfTheWeek' => ', ayın her {0} günü',
+    'Coma{0}Through{1}' => ', {0} ile {1} arasında',
+    'First' => 'ilk',
+    'Second' => 'ikinci',
+    'Third' => 'üçüncü',
+    'Fourth' => 'dördüncü',
+    'Fifth' => 'beşinci',
+    'ComaOnThe' => ', ayın ',
+    'Space{0}OfTheMonth' => ' {0} günü',
+    'ComaOnTheLast{0}OfTheMonth' => ', ayın son {0} günü',
+    'ComaOnlyOn{0}' => ', sadece {0} günü',
+    'ComaEvery{0}Months' => ', {0} ayda bir',
+    'ComaOnlyIn{0}' => ', sadece {0} için',
+    'ComaOnTheLastDayOfTheMonth' => ', ayın son günü',
+    'ComaOnTheLastWeekdayOfTheMonth' => ', ayın son iş günü',
+    'FirstWeekday' => 'ilk iş günü',
+    'WeekdayNearestDay{0}' => '{0}. günü sonrasındaki ilk iş günü',
+    'ComaOnThe{0}OfTheMonth' => ', ayın {0}',
+    'ComaEvery{0}Days' => ', {0} günde bir',
+    'ComaBetweenDay{0}And{1}OfTheMonth' => ', ayın {0}. ve {1}. günleri arası',
+    'ComaOnDay{0}OfTheMonth' => ', ayın {0}. günü',
+    'SpaceAndSpace' => ' ve ',
+    'ComaEveryMinute' => ', her dakika',
+    'ComaEveryHour' => ', her saat',
+    'ComaEvery{0}Years' => ', {0} yılda bir',
+    'CommaStarting{0}' => ', başlangıç {0}',
+    'CommaDaysBeforeTheLastDayOfTheMonth' => ', {0} ayın son gününden önceki günler',
+];

@@ -1,0 +1,29 @@
+{
+    "name": "panlatent/cron-expression-descriptor",
+    "description": "Converts cron expressions into human readable descriptions.",
+    "type": "library",
+    "require-dev": {
+        "phpunit/phpunit": "^8.1@dev",
+        "php-coveralls/php-coveralls": "^2.1"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Panlatent",
+            "email": "panlatent@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=7.0"
+    },
+    "suggest": {
+        "ext-intl": "Help translate cron express description"
+    },
+    "autoload": {
+        "psr-4": {
+            "Panlatent\\CronExpressionDescriptor\\": "src/"
+        }
+    }
+}

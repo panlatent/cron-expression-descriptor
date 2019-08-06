@@ -1,0 +1,55 @@
+<?php
+/**
+ * Cron Expression Descriptor
+ *
+ * @link      https://github.com/panlatent/cron-expression-descriptor
+ * @copyright Copyright (c) 2019 panlatent@gmail.com
+ */
+
+return [
+    'EveryMinute' => 'jede Minute',
+    'EveryHour' => 'jede Stunde',
+    'AnErrorOccuredWhenGeneratingTheExpressionD' => 'Bei der Erzeugung der Ausdrucksbeschreibung ist ein Fehler aufgetreten. Überprüfe den Cron Expression Syntax.',
+    'AtSpace' => 'Um ',
+    'EveryMinuteBetween{0}And{1}' => 'Jede Minute zwischen {0} und {1}',
+    'At' => 'Um',
+    'SpaceAnd' => ' und',
+    'EverySecond' => 'Jede Sekunde',
+    'Every{0}Seconds' => 'alle {0} Sekunden',
+    'Seconds{0}Through{1}PastTheMinute' => 'Sekunden {0} bis {1}',
+    'At{0}SecondsPastTheMinute' => 'bei Sekunde {0}',
+    'Every{0}Minutes' => 'alle {0} Minuten',
+    'Minutes{0}Through{1}PastTheHour' => 'Minuten {0} bis {1}',
+    'At{0}MinutesPastTheHour' => 'bei Minute {0}',
+    'Every{0}Hours' => 'alle {0} Stunden',
+    'Between{0}And{1}' => 'zwischen {0} und {1}',
+    'At{0}' => 'um {0}',
+    'ComaEveryDay' => ', jeden Tag',
+    'ComaEvery{0}DaysOfTheWeek' => ', alle {0} Tage der Woche',
+    'Coma{0}Through{1}' => ', {0} bis {1}',
+    'First' => 'ersten',
+    'Second' => 'zweiten',
+    'Third' => 'dritten',
+    'Fourth' => 'vierten',
+    'Fifth' => 'fünften',
+    'ComaOnThe' => ', am ',
+    'Space{0}OfTheMonth' => ' {0} des Monats',
+    'ComaOnTheLast{0}OfTheMonth' => ', am letzten {0} des Monats',
+    'ComaOnlyOn{0}' => ', nur am {0}',
+    'ComaEvery{0}Months' => ', alle {0} Monate',
+    'ComaOnlyIn{0}' => ', nur im {0}',
+    'ComaOnTheLastDayOfTheMonth' => ', am letzten Tag des Monats',
+    'ComaOnTheLastWeekdayOfTheMonth' => ', am letzten Werktag des Monats',
+    'FirstWeekday' => 'ersten Werktag',
+    'WeekdayNearestDay{0}' => 'Werktag am nächsten zum {0} Tag',
+    'ComaOnThe{0}OfTheMonth' => ', am {0} des Monats',
+    'ComaEvery{0}Days' => ', alle {0} Tage',
+    'ComaBetweenDay{0}And{1}OfTheMonth' => ', zwischen Tag {0} und {1} des Monats',
+    'ComaOnDay{0}OfTheMonth' => ', am {0} Tag des Monats',
+    'SpaceAndSpace' => ' und ',
+    'ComaEveryMinute' => ', jede Minute',
+    'ComaEveryHour' => ', jede Stunde',
+    'ComaEvery{0}Years' => ', alle {0} Jahre',
+    'CommaStarting{0}' => ', beginnend {0}',
+    'CommaDaysBeforeTheLastDayOfTheMonth' => ', {0} tage vor dem letzten Tag des Monats',
+];

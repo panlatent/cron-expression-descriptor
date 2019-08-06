@@ -1,0 +1,55 @@
+<?php
+/**
+ * Cron Expression Descriptor
+ *
+ * @link      https://github.com/panlatent/cron-expression-descriptor
+ * @copyright Copyright (c) 2019 panlatent@gmail.com
+ */
+
+return [
+    'EveryMinute' => 'каждую минуту',
+    'EveryHour' => 'каждый час',
+    'AnErrorOccuredWhenGeneratingTheExpressionD' => 'Произошла ошибка во время генерации описания выражения. Проверьте синтаксис крон-выражения.',
+    'AtSpace' => 'В ',
+    'EveryMinuteBetween{0}And{1}' => 'Каждую минуту с {0} по {1}',
+    'At' => 'В',
+    'SpaceAnd' => ' и',
+    'EverySecond' => 'каждую секунду',
+    'Every{0}Seconds' => 'каждые {0} секунд',
+    'Seconds{0}Through{1}PastTheMinute' => 'секунды с {0} по {1}',
+    'At{0}SecondsPastTheMinute' => 'в {0} секунд',
+    'Every{0}Minutes' => 'каждые {0} минут',
+    'Minutes{0}Through{1}PastTheHour' => 'минуты с {0} по {1}',
+    'At{0}MinutesPastTheHour' => 'в {0} минут',
+    'Every{0}Hours' => 'каждые {0} часов',
+    'Between{0}And{1}' => 'с {0} по {1}',
+    'At{0}' => 'в {0}',
+    'ComaEveryDay' => ', каждый день',
+    'ComaEvery{0}DaysOfTheWeek' => ', каждые {0} дней недели',
+    'Coma{0}Through{1}' => ', {0} по {1}',
+    'First' => 'первый',
+    'Second' => 'второй',
+    'Third' => 'третий',
+    'Fourth' => 'четвертый',
+    'Fifth' => 'пятый',
+    'ComaOnThe' => ', в ',
+    'Space{0}OfTheMonth' => ' {0} месяца',
+    'ComaOnTheLast{0}OfTheMonth' => ', в последний {0} месяца',
+    'ComaOnlyOn{0}' => ', только в {0}',
+    'ComaEvery{0}Months' => ', каждые {0} месяцев',
+    'ComaOnlyIn{0}' => ', только в {0}',
+    'ComaOnTheLastDayOfTheMonth' => ', в последний день месяца',
+    'ComaOnTheLastWeekdayOfTheMonth' => ', в последний будний день месяца',
+    'FirstWeekday' => 'первый будний день',
+    'WeekdayNearestDay{0}' => 'ближайший будний день к {0}',
+    'ComaOnThe{0}OfTheMonth' => ', в {0} месяца',
+    'ComaEvery{0}Days' => ', каждые {0} дней',
+    'ComaBetweenDay{0}And{1}OfTheMonth' => ', с {0} по {1} число месяца',
+    'ComaOnDay{0}OfTheMonth' => ', в {0} число месяца',
+    'SpaceAndSpace' => ' и ',
+    'ComaEveryMinute' => ', каждую минуту',
+    'ComaEveryHour' => ', каждый час',
+    'ComaEvery{0}Years' => ', каждые {0} лет',
+    'CommaStarting{0}' => ', начало {0}',
+    'CommaDaysBeforeTheLastDayOfTheMonth' => ', {0} дней до последнего дня месяца',
+];
