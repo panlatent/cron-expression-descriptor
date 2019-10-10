@@ -51,7 +51,5 @@ return [
     'ComaEveryHour' => ', 每小时',
     'ComaEvery{0}Years' => ', 每 {0} 年',
     'CommaStarting{0}' => ', 开始 {0}',
-    'AMPeriod' => '上午',
-    'PMPeriod' => '下午',
     'CommaDaysBeforeTheLastDayOfTheMonth' => ', {0} 这个月的最后一天的前几天',
 ];

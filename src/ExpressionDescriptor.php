@@ -563,7 +563,7 @@ class ExpressionDescriptor
         $period = '';
 
         if (!$this->use24HourTimeFormat) {
-            $period = $this->translate($hour >= 12 ? 'PMPeriod' : 'AMPeriod');
+            $period = $this->translate($hour >= 12 ? 'PMPeriod' : 'AMPeriod', [], false);
 
             if (!empty($period)) {
                 $period = ' ' . $period;
