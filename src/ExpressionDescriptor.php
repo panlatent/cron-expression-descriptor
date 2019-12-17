@@ -10,15 +10,23 @@ namespace Panlatent\CronExpressionDescriptor;
 
 use DateTime;
 use IntlDateFormatter;
+use Panlatent\CronExpressionDescriptor\Enums\CronTimeUnitsEnum;
+use Panlatent\CronExpressionDescriptor\Exceptions\ExpressionException;
+use Panlatent\CronExpressionDescriptor\Utils\ArrayUtils;
+use Panlatent\CronExpressionDescriptor\Utils\StringUtils;
 
 /**
  * Class ExpressionDescriptor
  *
  * @package Panlatent\CronExpressionDescriptor
- * @author Panlatent <panlatent@gmail.com>
+ * @author  Panlatent <panlatent@gmail.com>
+ * @author  CaliforniaMountainSnake <CaliforniaMountainSnake1@yandex.ru>
  */
 class ExpressionDescriptor
 {
+    use ArrayUtils;
+    use StringUtils;
+
     // Properties
     // =========================================================================
 
@@ -30,7 +38,7 @@ class ExpressionDescriptor
     /**
      * @var bool
      */
-    protected $use24HourTimeFormat = false;
+    protected $isUse24HourTimeFormat;
 
     /**
      * @var string[]
@@ -41,6 +49,11 @@ class ExpressionDescriptor
      * @var string
      */
     private $language;
+
+    /**
+     * @var string
+     */
+    private $locale;
 
     /**
      * @var callable|null
@@ -56,18 +69,25 @@ class ExpressionDescriptor
     // =========================================================================
 
     /**
-     * CronExpression constructor.
+     * ExpressionDescriptor constructor.
      *
      * @param string $expression
-     * @param string $language
+     * @param string $locale
+     * @param bool   $isUse24HourTimeFormat
+     *
      * @throws ExpressionException
      */
-    public function __construct(string $expression, string $language = 'en')
+    public function __construct(string $expression, string $locale = 'en_US', bool $isUse24HourTimeFormat = false)
     {
-        list($second, $minute, $hour, $day, $month, $week, $year) = (new ExpressionParser($expression))->parse();
-
+        [$second, $minute, $hour, $day, $month, $week, $year] = (new ExpressionParser($expression))->parse();
         $this->expression = compact('second', 'minute', 'hour', 'day', 'month', 'week', 'year');
-        $this->language = $language;
+
+        $this->isUse24HourTimeFormat = $isUse24HourTimeFormat;
+
+        // Intl extension receives a locale in en_US format, but we only have en.php file.
+        $explodedLang = explode('_', $locale);
+        $this->language = $explodedLang[0];
+        $this->locale = $locale;
         $this->intl = extension_loaded('intl');
     }
 
@@ -106,35 +126,40 @@ class ExpressionDescriptor
         $minute = $this->expression['minute'];
         $hour = $this->expression['hour'];
 
-        if (!StringHelper::contains($minute, $this->defaultSpecialCharacters) &&
-            !StringHelper::contains($hour, $this->defaultSpecialCharacters) &&
-            !StringHelper::contains($second, $this->defaultSpecialCharacters)) {
-            $description = $this->translate('AtSpace') . self::formatTime($hour, $minute, $second);
-        } elseif ($second == '' &&
-            StringHelper::contains($minute, '-') &&
-            !StringHelper::contains($minute, ',') &&
-            !StringHelper::contains($hour, $this->defaultSpecialCharacters)) {
+        if (!$this->stringContains($minute, $this->defaultSpecialCharacters)
+            && !$this->stringContains($hour, $this->defaultSpecialCharacters)
+            && !$this->stringContains($second, $this->defaultSpecialCharacters)
+        ) {
+            // single minute and single hour
+            $description = $this->translate('AtSpace') . $this->formatTime($hour, $minute, $second);
+        } elseif ($second === '' && $this->stringContains($minute, '-')
+            && !$this->stringContains($minute, ',')
+            && !$this->stringContains($hour, $this->defaultSpecialCharacters)
+        ) {
             //minute range in single hour (i.e. 0-10 11)
             $minuteParts = explode('-', $minute);
             $description = $this->translate('EveryMinuteBetween{0}And{1}', [
-                self::formatTime($hour, $minuteParts[0]),
-                self::formatTime($hour, $minuteParts[1]),
+                $this->formatTime($hour, $minuteParts[0]),
+                $this->formatTime($hour, $minuteParts[1]),
             ]);
-        } elseif ($second == '' &&
-            StringHelper::contains($hour, ',') &&
-            !StringHelper::contains($hour, '-') &&
-            !StringHelper::contains($minute, $this->defaultSpecialCharacters)) {
+        } elseif ($second === ''
+            && $this->stringContains($hour, ',')
+            && !$this->stringContains($hour, '-')
+            && !$this->stringContains($minute, $this->defaultSpecialCharacters)
+            && !$this->isEveryTimeUnit(CronTimeUnitsEnum::HOUR(), $hour)
+        ) {
             //hours list with single minute (o.e. 30 6,14,16)
             $hourParts = explode(',', $hour);
             $description = $this->translate('At');
-            for ($i = 0; $i < count($hourParts); $i++) {
-                $description .= ' ' . self::formatTime($hourParts[$i], $minute);
+
+            foreach ($hourParts as $i => $hourPart) {
+                $description .= ' ' . $this->formatTime($hourPart, $minute);
                 if ($i < (count($hourParts) - 2)) {
                     $description .= ',';
                 }
 
-                if ($i == count($hourParts) - 2) {
-                    $description .= $this->translate("SpaceAnd");
+                if ($i === count($hourParts) - 2) {
+                    $description .= $this->translate('SpaceAnd');
                 }
             }
         } else {
@@ -145,12 +170,12 @@ class ExpressionDescriptor
 
             $description = $secondsDescription;
 
-            if (strlen($description) > 0 && strlen($minutesDescription) > 0) {
+            if ($description !== '' && $minutesDescription !== '') {
                 $description .= ', ';
             }
             $description .= $minutesDescription;
 
-            if (strlen($description) > 0 && strlen($hoursDescription) > 0) {
+            if ($description !== '' && $hoursDescription !== '') {
                 $description .= ', ';
             }
 
@@ -166,9 +191,10 @@ class ExpressionDescriptor
     public function getSecondsDescription(): string
     {
         $description = $this->getSegmentDescription(
+            CronTimeUnitsEnum::SECOND(),
             $this->expression['second'],
             $this->translate('EverySecond'),
-            function ($s) {
+            static function ($s) {
                 return $s;
             },
             function ($s) {
@@ -179,14 +205,18 @@ class ExpressionDescriptor
             },
             function ($s) {
                 if (is_int($s) || ctype_alnum($s)) {
-                    return $s == '0' ? ''
-                        : ($s < 20)
-                            ? $this->translate('At{0}SecondsPastTheMinute')
-                            : $this->translate('At{0}SecondsPastTheMinuteGt20', [], false) ?? $this->translate('At{0}SecondsPastTheMinute');
+                    if ($s === '0') {
+                        return '';
+                    }
 
-                } else {
-                    return $this->translate('At{0}SecondsPastTheMinute');
+                    return ($s < 20)
+                        ? $this->translate('At{0}SecondsPastTheMinute')
+                        : $this->translate('At{0}SecondsPastTheMinuteGt20', [], false) ??
+                        $this->translate('At{0}SecondsPastTheMinute');
+
                 }
+
+                return $this->translate('At{0}SecondsPastTheMinute');
             },
             function () {
                 return $this->translate('ComaMin{0}ThroughMin{1}', [], false) ?? $this->translate('Coma{0}Through{1}');
@@ -203,9 +233,10 @@ class ExpressionDescriptor
     public function getMinutesDescription(): string
     {
         $description = $this->getSegmentDescription(
+            CronTimeUnitsEnum::MINUTE(),
             $this->expression['minute'],
             $this->translate('EveryMinute'),
-            function ($s) {
+            static function ($s) {
                 return $s;
             },
             function ($s) {
@@ -216,10 +247,10 @@ class ExpressionDescriptor
             },
             function ($s) {
                 if (ctype_alnum($s)) {
-                    return $s == '0' ? '' : $this->translate('At{0}MinutesPastTheHour');
-                } else {
-                    return $this->translate('At{0}MinutesPastTheHour');
+                    return $s === '0' ? '' : $this->translate('At{0}MinutesPastTheHour');
                 }
+
+                return $this->translate('At{0}MinutesPastTheHour');
             },
             function () {
                 return $this->translate('Coma{0}Through{1}');
@@ -234,8 +265,9 @@ class ExpressionDescriptor
      */
     public function getHoursDescription(): string
     {
-        $expression = $this->expression['hour'];
-        $description = $this->getSegmentDescription($expression,
+        $description = $this->getSegmentDescription(
+            CronTimeUnitsEnum::HOUR(),
+            $this->expression['hour'],
             $this->translate('EveryHour'),
             function ($s) {
                 return $this->formatTime($s, '0');
@@ -262,68 +294,71 @@ class ExpressionDescriptor
      */
     public function getDayOfWeekDescription(): string
     {
-        if ($this->expression['week'] == "*") {
-            // DOW is specified as * so we will not generate a description and defer to DOM part.
-            // Otherwise, we could get a contradiction like "on day 1 of the month, every day"
-            // or a dupe description like "every day, every day".
-            $description = '';
-        } else {
-            $description = $this->getSegmentDescription(
-                $this->expression['week'],
-                $this->translate('ComaEveryDay'),
-                function ($s) {
-                    $exp = ($pos = strpos($s, '#')) !== false ? substr($s, 0, $pos)
-                        : ((strpos($s, 'L') !== false) ? str_replace('L', '', $s) : $s);
-
-                    if ($this->intl) {
-                        $fmt = new IntlDateFormatter($this->language, IntlDateFormatter::FULL, IntlDateFormatter::FULL, null, IntlDateFormatter::GREGORIAN, 'EEEE');
-                        return $fmt->format((new DateTime("Sunday +{$exp} day"))->getTimestamp());
-                    }
-
-                    return $exp;
-                },
-                function ($s) {
-                    return $this->translate('ComaEvery{0}DaysOfTheWeek', ['0' => $s]);
-                },
-                function () {
-                    return $this->translate('Coma{0}Through{1}');
-                },
-                function ($s) {
-                    $format = null;
-                    if (($pos = strpos($s, '#')) !== false) {
-                        $dayOfWeekOfMonthNumber = substr($s, $pos + 1);
-                        $dayOfWeekOfMonthDescription = null;
-                        switch ($dayOfWeekOfMonthNumber) {
-                            case '1':
-                                $dayOfWeekOfMonthDescription = $this->translate('First');
-                                break;
-                            case '2':
-                                $dayOfWeekOfMonthDescription = $this->translate('Second');
-                                break;
-                            case '3':
-                                $dayOfWeekOfMonthDescription = $this->translate('Third');
-                                break;
-                            case '4':
-                                $dayOfWeekOfMonthDescription = $this->translate('Fourth');
-                                break;
-                            case '5':
-                                $dayOfWeekOfMonthDescription = $this->translate("Fifth");
-                                break;
-                        }
-                        $format = $this->translate('ComaOnThe') . $dayOfWeekOfMonthDescription . $this->translate('Space{0}OfTheMonth');
-                    } elseif (strpos($s, 'L') !== false) {
-                        $format = $this->translate('ComaOnTheLast{0}OfTheMonth');
-                    } else {
-                        $format = $this->translate('ComaOnlyOn{0}');
-                    }
-
-                    return $format;
-                },
-                function () {
-                    return $this->translate('Coma{0}Through{1}');
+        // DOW is specified as * so we will not generate a description and defer to DOM part.
+        // Otherwise, we could get a contradiction like "on day 1 of the month, every day"
+        // or a dupe description like "every day, every day".
+        $description = $this->getSegmentDescription(
+            CronTimeUnitsEnum::WEEKDAY(),
+            $this->expression['week'],
+            $this->translate('ComaEveryDay'),
+            function ($s) {
+                $pos = strpos($s, '#');
+                if ($pos !== false) {
+                    $exp = substr($s, 0, $pos);
+                } else {
+                    $exp = ((strpos($s, 'L') !== false) ? str_replace('L', '', $s) : $s);
                 }
-            );
-        }
+
+                if ($this->intl) {
+                    $fmt = new IntlDateFormatter($this->locale, IntlDateFormatter::FULL, IntlDateFormatter::FULL,
+                        null, IntlDateFormatter::GREGORIAN, 'EEEE');
+                    return $fmt->format((new DateTime("Sunday +{$exp} day"))->getTimestamp());
+                }
+
+                return $exp;
+            },
+            function ($s) {
+                return $this->translate('ComaEvery{0}DaysOfTheWeek', ['0' => $s]);
+            },
+            function () {
+                return $this->translate('Coma{0}Through{1}');
+            },
+            function ($s) {
+                $format = null;
+                if (($pos = strpos($s, '#')) !== false) {
+                    $dayOfWeekOfMonthNumber = substr($s, $pos + 1);
+                    $dayOfWeekOfMonthDescription = null;
+                    switch ($dayOfWeekOfMonthNumber) {
+                        case '1':
+                            $dayOfWeekOfMonthDescription = $this->translate('First');
+                            break;
+                        case '2':
+                            $dayOfWeekOfMonthDescription = $this->translate('Second');
+                            break;
+                        case '3':
+                            $dayOfWeekOfMonthDescription = $this->translate('Third');
+                            break;
+                        case '4':
+                            $dayOfWeekOfMonthDescription = $this->translate('Fourth');
+                            break;
+                        case '5':
+                            $dayOfWeekOfMonthDescription = $this->translate('Fifth');
+                            break;
+                    }
+                    $format = $this->translate('ComaOnThe') . $dayOfWeekOfMonthDescription
+                        . $this->translate('Space{0}OfTheMonth');
+                } elseif (strpos($s, 'L') !== false) {
+                    $format = $this->translate('ComaOnTheLast{0}OfTheMonth');
+                } else {
+                    $format = $this->translate('ComaOnlyOn{0}');
+                }
+
+                return $format;
+            },
+            function () {
+                return $this->translate('Coma{0}Through{1}');
+            }
+        );
 
         return $description;
     }
@@ -333,12 +368,15 @@ class ExpressionDescriptor
      */
     public function getMonthDescription(): string
     {
-        $description = $this->getSegmentDescription($this->expression['month'],
+        $description = $this->getSegmentDescription(
+            CronTimeUnitsEnum::MONTH(),
+            $this->expression['month'],
             '',
             function ($s) {
                 $datetime = new DateTime("$s/01");
                 if ($this->intl) {
-                    $fmt = new IntlDateFormatter($this->language, IntlDateFormatter::FULL, IntlDateFormatter::FULL, null, IntlDateFormatter::GREGORIAN, 'LLLL');
+                    $fmt = new IntlDateFormatter($this->locale, IntlDateFormatter::FULL, IntlDateFormatter::FULL,
+                        null, IntlDateFormatter::GREGORIAN, 'LLLL');
                     return $fmt->format($datetime->getTimestamp());
                 }
 
@@ -380,36 +418,39 @@ class ExpressionDescriptor
             default:
                 if (preg_match('#(\\d{1,2}W)|(W\\d{1,2})#', $expression, $match)) {
                     $dayNumber = (int)str_replace('W', '', $match[1]);
-                    $dayString = $dayNumber == 1 ? $this->translate('FirstWeekday') : $this->translate('WeekdayNearestDay{0}', ['0' => $dayNumber]);
+                    $dayString = $dayNumber === 1 ? $this->translate('FirstWeekday')
+                        : $this->translate('WeekdayNearestDay{0}', ['0' => $dayNumber]);
                     $description = $this->translate('ComaOnThe{0}OfTheMonth', ['0' => $dayString]);
                     break;
-                } else {
-                    // Handle "last day offset" (i.e. L-5:  "5 days before the last day of the month")
-                    if (preg_match('#L-(\\d{1,2})#', $expression, $match)) {
-                        $offSetDays = $match[1];
-                        $description = $this->translate('CommaDaysBeforeTheLastDayOfTheMonth', $offSetDays);
-                        break;
-                    } else {
-                        $description = $this->getSegmentDescription($expression,
-                            $this->translate('ComaEveryDay'),
-                            function ($s) {
-                                return $s;
-                            },
-                            function ($s) {
-                                return $this->translate($s == '1' ? 'ComaEveryDay' : 'ComaEvery{0}Days');
-                            },
-                            function () {
-                                return $this->translate('ComaBetweenDay{0}And{1}OfTheMonth');
-                            },
-                            function () {
-                                return $this->translate('ComaOnDay{0}OfTheMonth');
-                            },
-                            function () {
-                                return $this->translate('ComaX0ThroughX1');
-                            });
-                        break;
-                    }
                 }
+
+                // Handle "last day offset" (i.e. L-5:  "5 days before the last day of the month")
+                if (preg_match('#L-(\\d{1,2})#', $expression, $match)) {
+                    $offSetDays = $match[1];
+                    $description = $this->translate('CommaDaysBeforeTheLastDayOfTheMonth', $offSetDays);
+                    break;
+                }
+
+                $description = $this->getSegmentDescription(
+                    CronTimeUnitsEnum::DAY(),
+                    $expression,
+                    $this->translate('ComaEveryDay'),
+                    static function ($s) {
+                        return $s;
+                    },
+                    function ($s) {
+                        return $this->translate($s === '1' ? 'ComaEveryDay' : 'ComaEvery{0}Days');
+                    },
+                    function () {
+                        return $this->translate('ComaBetweenDay{0}And{1}OfTheMonth');
+                    },
+                    function () {
+                        return $this->translate('ComaOnDay{0}OfTheMonth');
+                    },
+                    function () {
+                        return $this->translate('ComaX0ThroughX1');
+                    });
+                break;
         }
 
         return $description;
@@ -420,8 +461,10 @@ class ExpressionDescriptor
      */
     public function getYearDescription(): string
     {
-        $description = $this->getSegmentDescription($this->expression['year'], '',
-            function ($s) {
+        $description = $this->getSegmentDescription(
+            CronTimeUnitsEnum::YEAR(),
+            $this->expression['year'], '',
+            static function ($s) {
                 if (preg_match('#^\d+$#', $s)) {
                     return (new DateTime("$s-01-01"))->format('Y');
                 }
@@ -449,58 +492,75 @@ class ExpressionDescriptor
     // =========================================================================
 
     /**
-     * @param string $expression
-     * @param string $allDescription
-     * @param callable $getSingleItemDescription
-     * @param callable $getIntervalDescriptionFormat
-     * @param callable $getBetweenDescriptionFormat
-     * @param callable $getDescriptionFormat
-     * @param callable $getRangeFormat
+     * @param CronTimeUnitsEnum $timeUnit
+     * @param string            $expressionPart
+     * @param string            $allDescription
+     * @param callable          $getSingleItemDescription
+     * @param callable          $getIntervalDescriptionFormat
+     * @param callable          $getBetweenDescriptionFormat
+     * @param callable          $getDescriptionFormat
+     * @param callable          $getRangeFormat
+     *
      * @return string|null
      */
-    protected function getSegmentDescription(string $expression,
-                                             string $allDescription,
-                                             callable $getSingleItemDescription,
-                                             callable $getIntervalDescriptionFormat,
-                                             callable $getBetweenDescriptionFormat,
-                                             callable $getDescriptionFormat,
-                                             callable $getRangeFormat)
-    {
+    protected function getSegmentDescription(
+        CronTimeUnitsEnum $timeUnit,
+        string $expressionPart,
+        string $allDescription,
+        callable $getSingleItemDescription,
+        callable $getIntervalDescriptionFormat,
+        callable $getBetweenDescriptionFormat,
+        callable $getDescriptionFormat,
+        callable $getRangeFormat
+    ): ?string {
         $description = null;
-        if ($expression == '') {
+        if ($expressionPart === '') {
             return '';
         }
 
-        if ($expression == '*') {
+        if ($this->isEveryTimeUnit($timeUnit, $expressionPart)) {
+            // Every time unit
             $description = $allDescription;
-        } elseif (!StringHelper::contains($expression, ['/', '-', ','])) {
-            $description = strtr($getDescriptionFormat($expression), ['{0}' => $getSingleItemDescription($expression)]);
-        } elseif (StringHelper::contains($expression, '/')) {
-            $segments = explode('/', $expression);
-            $description = strtr($getIntervalDescriptionFormat($segments[1]), ['{0}' => $getSingleItemDescription($segments[1])]);
+        } elseif (!$this->stringContains($expressionPart, ['/', '-', ','])) {
+            $description = strtr($getDescriptionFormat($expressionPart),
+                ['{0}' => $getSingleItemDescription($expressionPart)]);
+        } elseif (!$this->stringContains($expressionPart, ['/', '-'])
+            && (($everyNUnit = $this->detectIntervalUnit($timeUnit, $expressionPart)) !== null)
+        ) {
+            // Interval via the set of values that multiple to some number.
+            $description = strtr($getIntervalDescriptionFormat($everyNUnit),
+                ['{0}' => $getSingleItemDescription($everyNUnit)]);
+        } elseif ($this->stringContains($expressionPart, '/')) {
+            // Interval via "/"
+            $segments = explode('/', $expressionPart);
+
+            $description = strtr($getIntervalDescriptionFormat($segments[1]),
+                ['{0}' => $getSingleItemDescription($segments[1])]);
 
             //interval contains 'between' piece (i.e. 2-59/3 )
             if (strpos($segments[0], '-')) {
-                $betweenSegmentDescription = $this->generateBetweenSegmentDescription($segments[0], $getBetweenDescriptionFormat, $getSingleItemDescription);
+                $betweenSegmentDescription = $this->generateBetweenSegmentDescription($segments[0],
+                    $getBetweenDescriptionFormat, $getSingleItemDescription);
 
                 if (strpos($betweenSegmentDescription, ',') !== 0) {
                     $description .= ', ';
                 }
 
                 $description .= $betweenSegmentDescription;
-            } elseif (StringHelper::contains($segments[0], ['*', ',']) === false) {
-                $rangeItemDescription = strtr($getDescriptionFormat($segments[0]), ['{0}' => $getSingleItemDescription($segments[0])]);
+            } elseif ($this->stringContains($segments[0], ['*', ',']) === false) {
+                $rangeItemDescription = strtr($getDescriptionFormat($segments[0]),
+                    ['{0}' => $getSingleItemDescription($segments[0])]);
                 //remove any leading comma
                 $rangeItemDescription = str_replace(', ', '', $rangeItemDescription);
 
                 $description .= $this->translate('CommaStarting{0}', ['0' => $rangeItemDescription]);
             }
-        } elseif (StringHelper::contains($expression, ',')) {
-            $segments = explode(',', $expression);
+        } elseif ($this->stringContains($expressionPart, ',')) {
+            $segments = explode(',', $expressionPart);
 
             $descriptionContent = '';
 
-            for ($i = 0; $i < count($segments); $i++) {
+            foreach ($segments as $i => $segment) {
                 if ($i > 0 && count($segments) > 2) {
                     $descriptionContent .= ',';
 
@@ -509,12 +569,13 @@ class ExpressionDescriptor
                     }
                 }
 
-                if ($i > 0 && count($segments) > 1 && ($i == count($segments) - 1 || count($segments) == 2)) {
+                if ($i > 0 && count($segments) > 1 && ($i === count($segments) - 1 || count($segments) === 2)) {
                     $descriptionContent .= $this->translate('SpaceAndSpace');
                 }
 
-                if (strpos($segments[$i], '-') !== false) {
-                    $betweenSegmentDescription = $this->generateBetweenSegmentDescription($segments[$i], $getRangeFormat, $getSingleItemDescription);
+                if (strpos($segment, '-') !== false) {
+                    $betweenSegmentDescription = $this->generateBetweenSegmentDescription($segment,
+                        $getRangeFormat, $getSingleItemDescription);
 
                     //remove any leading comma
                     $betweenSegmentDescription = str_replace(', ', '', $betweenSegmentDescription);
@@ -525,29 +586,35 @@ class ExpressionDescriptor
                 }
             }
 
-            $description = strtr($getDescriptionFormat($expression), ['{0}' => $descriptionContent]);
-        } elseif (StringHelper::contains($expression, '-')) {
-            $description = $this->generateBetweenSegmentDescription($expression, $getBetweenDescriptionFormat, $getSingleItemDescription);
+            $description = strtr($getDescriptionFormat($expressionPart), ['{0}' => $descriptionContent]);
+        } elseif ($this->stringContains($expressionPart, '-')) {
+            $description = $this->generateBetweenSegmentDescription($expressionPart, $getBetweenDescriptionFormat,
+                $getSingleItemDescription);
         }
 
         return $description;
     }
 
     /**
-     * @param string $betweenExpression
+     * @param string   $betweenExpression
      * @param callable $getBetweenDescriptionFormat
      * @param callable $getSingleItemDescription
+     *
      * @return string
      */
-    protected function generateBetweenSegmentDescription(string $betweenExpression, callable $getBetweenDescriptionFormat, callable $getSingleItemDescription): string
-    {
+    protected function generateBetweenSegmentDescription(
+        string $betweenExpression,
+        callable $getBetweenDescriptionFormat,
+        callable $getSingleItemDescription
+    ): string {
         $description = '';
         $betweenSegments = explode('-', $betweenExpression);
         $betweenSegment1Description = $getSingleItemDescription($betweenSegments[0]);
         $betweenSegment2Description = $getSingleItemDescription($betweenSegments[1]);
         $betweenSegment2Description = str_replace(':00', ':59', $betweenSegment2Description);
         $betweenDescriptionFormat = $getBetweenDescriptionFormat($betweenExpression);
-        $description .= strtr($betweenDescriptionFormat, ['{0}' => $betweenSegment1Description, '{1}' => $betweenSegment2Description]);
+        $description .= strtr($betweenDescriptionFormat,
+            ['{0}' => $betweenSegment1Description, '{1}' => $betweenSegment2Description]);
 
         return $description;
     }
@@ -556,13 +623,14 @@ class ExpressionDescriptor
      * @param string $hour
      * @param string $minute
      * @param string $second
+     *
      * @return string
      */
     protected function formatTime(string $hour, string $minute, string $second = ''): string
     {
         $period = '';
 
-        if (!$this->use24HourTimeFormat) {
+        if (!$this->isUse24HourTimeFormat) {
             $period = $this->translate($hour >= 12 ? 'PMPeriod' : 'AMPeriod', [], false);
 
             if (!empty($period)) {
@@ -576,20 +644,22 @@ class ExpressionDescriptor
             }
         }
 
-        if ($second != '') {
+        if ($second !== '') {
             $second = ':' . str_pad($second, 2, '0', STR_PAD_LEFT);
         }
 
-        return sprintf('%s:%s%s%s', str_pad($hour, 2, '0', STR_PAD_LEFT), str_pad($minute, 2, '0', STR_PAD_LEFT), $second, $period);
+        return sprintf('%s:%s%s%s', str_pad($hour, 2, '0', STR_PAD_LEFT), str_pad($minute, 2, '0', STR_PAD_LEFT),
+            $second, $period);
     }
 
     /**
      * @param string $source
-     * @param array $params
-     * @param bool $forceTranslate
+     * @param array  $params
+     * @param bool   $forceTranslate
+     *
      * @return string|null
      */
-    protected function translate(string $source, array $params = [], bool $forceTranslate = true)
+    protected function translate(string $source, array $params = [], bool $forceTranslate = true): ?string
     {
         if ($this->translator !== null) {
             return call_user_func($this->translator, $source, $params);
@@ -614,5 +684,40 @@ class ExpressionDescriptor
         }
 
         return strtr($translations[$this->language][$source], $params);
+    }
+
+    /**
+     * @param CronTimeUnitsEnum $_time_unit
+     * @param string            $_expression_part
+     *
+     * @return bool
+     */
+    protected function isEveryTimeUnit(CronTimeUnitsEnum $_time_unit, string $_expression_part): bool
+    {
+        $parts = explode(',', $_expression_part);
+        if ($_expression_part === '*') {
+            return true;
+        }
+
+        switch ((string)$_time_unit) {
+            case CronTimeUnitsEnum::SECOND:
+                return $this->isContainsAllValues($parts, range(0, 59));
+            case CronTimeUnitsEnum::MINUTE:
+                return $this->isContainsAllValues($parts, range(0, 59));
+            case CronTimeUnitsEnum::HOUR:
+                return $this->isContainsAllValues($parts, range(0, 23));
+            case CronTimeUnitsEnum::DAY:
+                return $this->isContainsAllValues($parts, range(1, 31));
+            case CronTimeUnitsEnum::WEEKDAY:
+                return $this->isContainsAllValues($parts, range(0, 6))
+                    || $this->isContainsAllValues($parts, range(1, 7))
+                    || $this->isContainsAllValues($parts, ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']);
+            case CronTimeUnitsEnum::MONTH:
+                return $this->isContainsAllValues($parts, range(1, 12))
+                    || $this->isContainsAllValues($parts,
+                        ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']);
+        }
+
+        return false;
     }
 }

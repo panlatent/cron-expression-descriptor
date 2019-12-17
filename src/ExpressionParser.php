@@ -9,15 +9,24 @@
 namespace Panlatent\CronExpressionDescriptor;
 
 use DateTime;
+use Exception;
+use Panlatent\CronExpressionDescriptor\Enums\CronTimeUnitsEnum;
+use Panlatent\CronExpressionDescriptor\Exceptions\ExpressionException;
+use Panlatent\CronExpressionDescriptor\Utils\ArrayUtils;
+use Panlatent\CronExpressionDescriptor\Utils\StringUtils;
 
 /**
  * Class ExpressionParser
  *
  * @package Panlatent\CronExpressionDescriptor
- * @author Panlatent <panlatent@gmail.com>
+ * @author  Panlatent <panlatent@gmail.com>
+ * @author  CaliforniaMountainSnake <CaliforniaMountainSnake1@yandex.ru>
  */
 class ExpressionParser
 {
+    use ArrayUtils;
+    use StringUtils;
+
     // Properties
     // =========================================================================
 
@@ -38,7 +47,7 @@ class ExpressionParser
      * ExpressionParser constructor.
      *
      * @param string $expression
-     * @param array $options
+     * @param array  $options
      */
     public function __construct(string $expression, array $options = [])
     {
@@ -52,36 +61,39 @@ class ExpressionParser
     /**
      * @return array
      * @throws ExpressionException
+     * @throws Exception
      */
     public function parse(): array
     {
-        if ($this->expression == '') {
+        if ($this->expression === '' || empty($this->expression)) {
             throw new ExpressionException('Invalid cron expression');
         }
 
-        $expressionParts = explode(' ', $this->expression);
-        $count = count($expressionParts);
+        $parts = explode(' ', $this->expression);
+        $countOfParts = count($parts);
 
-        if ($count < 5) {
-            throw new ExpressionException("Expression only has {$count} parts.  At least 5 part are required.");
-        } elseif ($count == 5) {
+        if ($countOfParts < 5) {
+            throw new ExpressionException("Expression only has {$countOfParts} parts.  At least 5 part are required.");
+        }
+
+        if ($countOfParts === 5) {
             // 5 part cron so shift array past seconds element
-            $parsed = array_slice($expressionParts, 0, 5);
+            $parsed = array_slice($parts, 0, 5);
             array_unshift($parsed, '');
-            array_push($parsed, '');
-        } elseif ($count == 6) {
+            $parsed[] = '';
+        } elseif ($countOfParts === 6) {
             // If last element ends with 4 digits, a year element has been supplied and no seconds element
-            if (preg_match('#\d{4}$#', $expressionParts[5])) {
-                $parsed = array_slice($expressionParts, 0, 6);
+            if (preg_match('#\d{4}$#', $parts[5])) {
+                $parsed = array_slice($parts, 0, 6);
                 array_unshift($parsed, '');
             } else {
-                $parsed = $expressionParts;
-                array_push($parsed, '');
+                $parsed = $parts;
+                $parsed[] = '';
             }
-        } elseif ($count == 7) {
-            $parsed = $expressionParts;
+        } elseif ($countOfParts === 7) {
+            $parsed = $parts;
         } else {
-            throw new ExpressionException("Expression has too many parts ({$count}).  Expression must not have more than 7 parts.");
+            throw new ExpressionException("Expression has too many parts ({$countOfParts}).  Expression must not have more than 7 parts.");
         }
 
         $this->normalizeExpression($parsed);
@@ -94,8 +106,10 @@ class ExpressionParser
 
     /**
      * @param array $expressionParts
+     *
+     * @throws Exception
      */
-    protected function normalizeExpression(array &$expressionParts)
+    protected function normalizeExpression(array &$expressionParts): void
     {
         // Convert ? to * only for DOM and DOW
         $expressionParts[3] = str_replace('?', '*', $expressionParts[3]);
@@ -103,26 +117,27 @@ class ExpressionParser
 
         // Convert 0/, 1/ to */
         for ($i = 0; $i < 3; ++$i) {
-            if (strncmp($expressionParts[$i], "0/", 2) === 0) {
+            if (strncmp($expressionParts[$i], '0/', 2) === 0) {
                 $expressionParts[$i] = str_replace('0/', '*/', $expressionParts[$i]);
             }
         }
 
         for ($i = 3; $i < 7; ++$i) {
-            if (strncmp($expressionParts[$i], "1/", 2) === 0) {
+            if (strncmp($expressionParts[$i], '1/', 2) === 0) {
                 $expressionParts[$i] = str_replace('1/', '*/', $expressionParts[$i]);
             }
         }
 
         // Adjust DOW based on dayOfWeekStartIndexZero option
-        $expressionParts[5] = preg_replace_callback('?(^\d)|([^#/\s]\d)+?', function ($m) use ($expressionParts) {
-            $dowDigits = preg_replace('#\D#', '', $m[0]); // extract digit part (i.e. if "-2" or ",2", just take 2)
+        $expressionParts[5] = preg_replace_callback('?(^\d)|([^#/\s]\d)+?', function ($matches) {
+            // extract digit part (i.e. if "-2" or ",2", just take 2)
+            $dowDigits = (int)preg_replace('#\D#', '', $matches[0]);
             $dowDigitsAdjusted = $dowDigits;
 
             if ($this->dayOfWeekStartIndexZero) {
                 // "7" also means Sunday so we will convert to "0" to normalize it
-                if ($dowDigits == '7') {
-                    $dowDigitsAdjusted = '0';
+                if ($dowDigits === 7) {
+                    $dowDigitsAdjusted = 0;
                 }
             } else {
                 // If dayOfWeekStartIndexZero==false, Sunday is specified as 1 and Saturday is specified as 7.
@@ -130,11 +145,11 @@ class ExpressionParser
                 $dowDigitsAdjusted = $dowDigits - 1;
             }
 
-            return str_replace($dowDigits, $dowDigitsAdjusted, $m[0]);
+            return str_replace($dowDigits, $dowDigitsAdjusted, $matches[0]);
         }, $expressionParts[5]);
 
         // Convert DOM '?' to '*'
-        if ($expressionParts[3] == '?') {
+        if ($expressionParts[3] === '?') {
             $expressionParts[3] = '*';
         }
 
@@ -150,7 +165,7 @@ class ExpressionParser
         }
 
         // Convert 0 second to (empty)
-        if ($expressionParts[0] == '0') {
+        if ($expressionParts[0] === '0' || $expressionParts[0] === 0) {
             $expressionParts[0] = '';
         }
 
@@ -159,15 +174,19 @@ class ExpressionParser
         //     For example:
         //     0-20/3 9 * * * => 0-20/3 9-9 * * * (9 => 9-9)
         //     */5 3 * * * => */5 3-3 * * * (3 => 3-3)
-        if (!StringHelper::contains($expressionParts[2], ['*', '-', ',', '/']) &&
-            (preg_match('#[*/]#', $expressionParts[1]) || preg_match('#[*/]#', $expressionParts[0]))) {
+        if (!$this->stringContains($expressionParts[2], ['*', '-', ',', '/'])
+            && (preg_match('#[*/]#', $expressionParts[1])
+                || preg_match('#[*/]#', $expressionParts[0])
+                || $this->detectIntervalUnit(CronTimeUnitsEnum::MINUTE(), $expressionParts[1]) !== null
+                || $this->detectIntervalUnit(CronTimeUnitsEnum::SECOND(), $expressionParts[0]) !== null)
+        ) {
             $expressionParts[2] .= "-{$expressionParts[2]}";
         }
 
         // Loop through all parts and apply global normalization
-        for ($i = 0; $i < count($expressionParts); ++$i) {
+        foreach ($expressionParts as $i => $expressionPart) {
             // convert all '*/1' to '*'
-            if ($expressionParts[$i] == '*/1') {
+            if ($expressionPart === '*/1') {
                 $expressionParts[$i] = '*';
             }
 
@@ -178,8 +197,9 @@ class ExpressionParser
                 - DOW part '3/2' will be converted to '3-6/2' (every 2 days between Tuesday and Saturday)
             */
 
-            if (StringHelper::contains($expressionParts[$i], "/") &&
-                !StringHelper::contains($expressionParts[$i], ['*', '-', ','])) {
+            if ($this->stringContains($expressionPart, '/')
+                && !$this->stringContains($expressionPart, ['*', '-', ','])
+            ) {
                 $stepRangeThrough = null;
                 switch ($i) {
                     case 4:
@@ -196,9 +216,9 @@ class ExpressionParser
                         break;
                 }
 
-                if ($stepRangeThrough != null) {
-                    $parts = explode('/', $expressionParts[$i]);
-                    $expressionParts[$i] = sprintf("{%s}-{%s}/{%s}", $parts[0], $stepRangeThrough, $parts[1]);
+                if ($stepRangeThrough !== null) {
+                    $parts = explode('/', $expressionPart);
+                    $expressionParts[$i] = sprintf('{%s}-{%s}/{%s}', $parts[0], $stepRangeThrough, $parts[1]);
                 }
             }
         }
