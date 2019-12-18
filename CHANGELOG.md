@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Security
 
 
+## [1.0.4] - 2019-12-18
+### Fixed
+- Fixed composer dependencies for compatible with PHP 7.1.
+
 ## [1.0.3] - 2019-12-17
 ### Added
 - Added correct processing of time intervals defined as set of values. For example both expressions "*/15 * * * *" and "0,15,30,45 * * * *" are the equal and means "Every 15 minutes". But the previous version of library didn't understand it and returned a long text with description of each time unit.
