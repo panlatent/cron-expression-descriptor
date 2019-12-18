@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Security
 
 
+## [1.0.5] - 2019-12-18
+### Changed
+- composer.lock has been removed from the repository.
+
 ## [1.0.4] - 2019-12-18
 ### Fixed
 - Fixed composer dependencies for compatible with PHP 7.1.

@@ -3,3 +3,4 @@ coverage.xml
 /nbproject/
 /.idea/
 /REFACTORING.md
+composer.lock
