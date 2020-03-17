@@ -67,7 +67,7 @@ class ExpressionDescriptor
         list($second, $minute, $hour, $day, $month, $week, $year) = (new ExpressionParser($expression))->parse();
 
         $this->expression = compact('second', 'minute', 'hour', 'day', 'month', 'week', 'year');
-        // $language variabel can also contain a locale but we only want the language Example: en-GB = en
+        // $language variable can also contain a locale but we only want the language Example: en-GB = en
         $this->language = explode("-", $language)[0];
         $this->intl = extension_loaded('intl');
     }
