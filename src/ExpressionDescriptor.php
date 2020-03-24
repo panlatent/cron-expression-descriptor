@@ -91,7 +91,7 @@ class ExpressionDescriptor
 
         // Intl extension receives a locale in en_US format, but we only have en.php file.
         $this->locale = str_replace('-', '_', $locale);
-        $this->language = str_replace('_', '-', $language);
+        $this->language = str_replace('_', '-', $locale);
         $this->fallback = $fallback;
         $this->intl = extension_loaded('intl');
     }
@@ -297,7 +297,7 @@ class ExpressionDescriptor
         // DOW is specified as * so we will not generate a description and defer to DOM part.
         // Otherwise, we could get a contradiction like "on day 1 of the month, every day"
         // or a dupe description like "every day, every day".
-        $description = $this->getSegmentDescription(
+        return $this->getSegmentDescription(
             CronTimeUnitsEnum::WEEKDAY(),
             $this->expression['week'],
             $this->translate('ComaEveryDay'),
@@ -359,8 +359,6 @@ class ExpressionDescriptor
                 return $this->translate('Coma{0}Through{1}');
             }
         );
-
-        return $description;
     }
 
     /**
@@ -696,9 +694,8 @@ class ExpressionDescriptor
         }
 
         switch ((string)$_time_unit) {
+            case CronTimeUnitsEnum::MINUTE: // No break
             case CronTimeUnitsEnum::SECOND:
-                return $this->isContainsAllValues($parts, range(0, 59));
-            case CronTimeUnitsEnum::MINUTE:
                 return $this->isContainsAllValues($parts, range(0, 59));
             case CronTimeUnitsEnum::HOUR:
                 return $this->isContainsAllValues($parts, range(0, 23));
@@ -716,7 +713,6 @@ class ExpressionDescriptor
 
         return false;
     }
-}
 
     /*
      * @param string $language
