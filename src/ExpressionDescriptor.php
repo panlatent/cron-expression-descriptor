@@ -43,6 +43,11 @@ class ExpressionDescriptor
     private $language;
 
     /**
+     * @var bool
+     */
+    private $fallback;
+
+    /**
      * @var callable|null
      */
     private $translator;
@@ -60,14 +65,16 @@ class ExpressionDescriptor
      *
      * @param string $expression
      * @param string $language
+     * @param bool $fallback
      * @throws ExpressionException
      */
-    public function __construct(string $expression, string $language = 'en')
+    public function __construct(string $expression, string $language = 'en', bool $fallback = true)
     {
         list($second, $minute, $hour, $day, $month, $week, $year) = (new ExpressionParser($expression))->parse();
 
         $this->expression = compact('second', 'minute', 'hour', 'day', 'month', 'week', 'year');
-        $this->language = $language;
+        $this->language = str_replace('_', '-', $language);
+        $this->fallback = $fallback;
         $this->intl = extension_loaded('intl');
     }
 
@@ -165,7 +172,7 @@ class ExpressionDescriptor
      */
     public function getSecondsDescription(): string
     {
-        $description = $this->getSegmentDescription(
+        return $this->getSegmentDescription(
             $this->expression['second'],
             $this->translate('EverySecond'),
             function ($s) {
@@ -192,8 +199,6 @@ class ExpressionDescriptor
                 return $this->translate('ComaMin{0}ThroughMin{1}', [], false) ?? $this->translate('Coma{0}Through{1}');
             }
         );
-
-        return $description;
     }
 
 
@@ -202,7 +207,7 @@ class ExpressionDescriptor
      */
     public function getMinutesDescription(): string
     {
-        $description = $this->getSegmentDescription(
+        return $this->getSegmentDescription(
             $this->expression['minute'],
             $this->translate('EveryMinute'),
             function ($s) {
@@ -225,8 +230,6 @@ class ExpressionDescriptor
                 return $this->translate('Coma{0}Through{1}');
             }
         );
-
-        return $description;
     }
 
     /**
@@ -235,7 +238,7 @@ class ExpressionDescriptor
     public function getHoursDescription(): string
     {
         $expression = $this->expression['hour'];
-        $description = $this->getSegmentDescription($expression,
+        return $this->getSegmentDescription($expression,
             $this->translate('EveryHour'),
             function ($s) {
                 return $this->formatTime($s, '0');
@@ -253,8 +256,6 @@ class ExpressionDescriptor
                 return $this->translate('Coma{0}Through{1}');
             }
         );
-
-        return $description;
     }
 
     /**
@@ -333,7 +334,7 @@ class ExpressionDescriptor
      */
     public function getMonthDescription(): string
     {
-        $description = $this->getSegmentDescription($this->expression['month'],
+        return $this->getSegmentDescription($this->expression['month'],
             '',
             function ($s) {
                 $datetime = new DateTime("$s/01");
@@ -357,8 +358,6 @@ class ExpressionDescriptor
                 return $this->translate('Coma{0}Through{1}');
             }
         );
-
-        return $description;
     }
 
     /**
@@ -420,7 +419,7 @@ class ExpressionDescriptor
      */
     public function getYearDescription(): string
     {
-        $description = $this->getSegmentDescription($this->expression['year'], '',
+        return $this->getSegmentDescription($this->expression['year'], '',
             function ($s) {
                 if (preg_match('#^\d+$#', $s)) {
                     return (new DateTime("$s-01-01"))->format('Y');
@@ -441,8 +440,6 @@ class ExpressionDescriptor
                 return $this->translate('Coma{0}Through{1}');
             }
         );
-
-        return $description;
     }
 
     // Protected Methods
@@ -597,7 +594,7 @@ class ExpressionDescriptor
 
         static $translations = [];
         if (!isset($translations[$this->language])) {
-            $translations[$this->language] = require dirname(__DIR__) . '/languages/' . $this->language . '.php';
+            $translations[$this->language] = $this->load($this->language);
         }
 
         if (!isset($translations[$this->language][$source])) {
@@ -614,5 +611,26 @@ class ExpressionDescriptor
         }
 
         return strtr($translations[$this->language][$source], $params);
+    }
+
+    /**
+     * @param string $language
+     * @return array
+     */
+    private function load(string $language)
+    {
+        $file = dirname(__DIR__) . '/languages/' . $language . '.php';
+        if (is_file($file)) {
+            return require $file;
+        }
+
+        if (($pos = strpos($language, '-')) !== false && $this->fallback) {
+            $file = dirname(__DIR__) . '/languages/' . substr($language, 0, $pos) . '.php';
+            if (is_file($file)) {
+                return require $file;
+            }
+        }
+
+        return [];
     }
 }
