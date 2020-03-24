@@ -55,6 +55,11 @@ class ExpressionDescriptor
      */
     private $locale;
 
+    /*
+     * @var bool
+     */
+    private $fallback;
+
     /**
      * @var callable|null
      */
@@ -74,20 +79,20 @@ class ExpressionDescriptor
      * @param string $expression
      * @param string $locale
      * @param bool   $isUse24HourTimeFormat
+     * @param bool   $fallback
      *
      * @throws ExpressionException
      */
-    public function __construct(string $expression, string $locale = 'en_US', bool $isUse24HourTimeFormat = false)
+    public function __construct(string $expression, string $locale = 'en_US', bool $isUse24HourTimeFormat = false, bool $fallback = true)
     {
         [$second, $minute, $hour, $day, $month, $week, $year] = (new ExpressionParser($expression))->parse();
         $this->expression = compact('second', 'minute', 'hour', 'day', 'month', 'week', 'year');
-
         $this->isUse24HourTimeFormat = $isUse24HourTimeFormat;
 
         // Intl extension receives a locale in en_US format, but we only have en.php file.
-        $explodedLang = explode('_', $locale);
-        $this->language = $explodedLang[0];
-        $this->locale = $locale;
+        $this->locale = str_replace('-', '_', $locale);
+        $this->language = str_replace('_', '-', $language);
+        $this->fallback = $fallback;
         $this->intl = extension_loaded('intl');
     }
 
@@ -190,7 +195,7 @@ class ExpressionDescriptor
      */
     public function getSecondsDescription(): string
     {
-        $description = $this->getSegmentDescription(
+        return $this->getSegmentDescription(
             CronTimeUnitsEnum::SECOND(),
             $this->expression['second'],
             $this->translate('EverySecond'),
@@ -222,8 +227,6 @@ class ExpressionDescriptor
                 return $this->translate('ComaMin{0}ThroughMin{1}', [], false) ?? $this->translate('Coma{0}Through{1}');
             }
         );
-
-        return $description;
     }
 
 
@@ -232,7 +235,7 @@ class ExpressionDescriptor
      */
     public function getMinutesDescription(): string
     {
-        $description = $this->getSegmentDescription(
+        return $this->getSegmentDescription(
             CronTimeUnitsEnum::MINUTE(),
             $this->expression['minute'],
             $this->translate('EveryMinute'),
@@ -256,8 +259,6 @@ class ExpressionDescriptor
                 return $this->translate('Coma{0}Through{1}');
             }
         );
-
-        return $description;
     }
 
     /**
@@ -265,9 +266,10 @@ class ExpressionDescriptor
      */
     public function getHoursDescription(): string
     {
-        $description = $this->getSegmentDescription(
+         return $this->getSegmentDescription(
             CronTimeUnitsEnum::HOUR(),
             $this->expression['hour'],
+
             $this->translate('EveryHour'),
             function ($s) {
                 return $this->formatTime($s, '0');
@@ -285,8 +287,6 @@ class ExpressionDescriptor
                 return $this->translate('Coma{0}Through{1}');
             }
         );
-
-        return $description;
     }
 
     /**
@@ -368,7 +368,7 @@ class ExpressionDescriptor
      */
     public function getMonthDescription(): string
     {
-        $description = $this->getSegmentDescription(
+        return $this->getSegmentDescription(
             CronTimeUnitsEnum::MONTH(),
             $this->expression['month'],
             '',
@@ -395,8 +395,6 @@ class ExpressionDescriptor
                 return $this->translate('Coma{0}Through{1}');
             }
         );
-
-        return $description;
     }
 
     /**
@@ -461,7 +459,7 @@ class ExpressionDescriptor
      */
     public function getYearDescription(): string
     {
-        $description = $this->getSegmentDescription(
+        return $this->getSegmentDescription(
             CronTimeUnitsEnum::YEAR(),
             $this->expression['year'], '',
             static function ($s) {
@@ -484,8 +482,6 @@ class ExpressionDescriptor
                 return $this->translate('Coma{0}Through{1}');
             }
         );
-
-        return $description;
     }
 
     // Protected Methods
@@ -667,7 +663,7 @@ class ExpressionDescriptor
 
         static $translations = [];
         if (!isset($translations[$this->language])) {
-            $translations[$this->language] = require dirname(__DIR__) . '/languages/' . $this->language . '.php';
+            $translations[$this->language] = $this->load($this->language);
         }
 
         if (!isset($translations[$this->language][$source])) {
@@ -719,5 +715,27 @@ class ExpressionDescriptor
         }
 
         return false;
+    }
+}
+
+    /*
+     * @param string $language
+     * @return array
+     */
+    private function load(string $language)
+    {
+        $file = dirname(__DIR__) . '/languages/' . $language . '.php';
+        if (is_file($file)) {
+            return require $file;
+        }
+
+        if (($pos = strpos($language, '-')) !== false && $this->fallback) {
+            $file = dirname(__DIR__) . '/languages/' . substr($language, 0, $pos) . '.php';
+            if (is_file($file)) {
+                return require $file;
+            }
+        }
+
+        return [];
     }
 }
