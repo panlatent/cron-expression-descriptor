@@ -89,6 +89,9 @@ class ExpressionDescriptorTest extends TestCase
 
         $this->assertEquals('Every minute',
             (new ExpressionDescriptor('* * * * *', 'en_US'))->getDescription());
+
+        $this->assertEquals('Every minute',
+            (new ExpressionDescriptor('* * * * *', 'en-US'))->getDescription());
     }
 
     public function test24HoursFormat(): void
