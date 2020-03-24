@@ -1,6 +1,6 @@
 Cron Expression Descriptor
 ===========================
-Converts cron expressions into human readable descriptions.
+Converts cron expressions into human readable descriptions in PHP.
 
 [![Build Status](https://travis-ci.org/panlatent/cron-expression-descriptor.svg)](https://travis-ci.org/panlatent/cron-expression-descriptor)
 [![Coverage Status](https://coveralls.io/repos/github/panlatent/cron-expression-descriptor/badge.svg)](https://coveralls.io/github/panlatent/cron-expression-descriptor)
@@ -19,7 +19,7 @@ It's recommended that you use [Composer](https://getcomposer.org/) to install th
 $ composer require panlatent/cron-expression-descriptor
 ```
 
-This will install the library and all required dependencies. The project requires **PHP 7.0** or newer.
+This will install the library and all required dependencies. The project requires **PHP 7.1** or newer.
 
 Usage
 -----

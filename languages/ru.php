@@ -51,5 +51,7 @@ return [
     'ComaEveryHour' => ', каждый час',
     'ComaEvery{0}Years' => ', каждые {0} лет',
     'CommaStarting{0}' => ', начало {0}',
+    'AMPeriod' => 'AM',
+    'PMPeriod' => 'PM',
     'CommaDaysBeforeTheLastDayOfTheMonth' => ', {0} дней до последнего дня месяца',
 ];
