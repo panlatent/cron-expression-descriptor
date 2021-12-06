@@ -96,12 +96,25 @@ class ExpressionDescriptorTest extends TestCase
 
     public function test24HoursFormat(): void
     {
-        $this->assertEquals('Every 15 minutes, at 10:00 AM and 11:00 PM',
-            (new ExpressionDescriptor('0,15,30,45 10,23 * 1,2,3,4,5,6,7,8,9,10,11,12 1,2,3,4,5,6,0'))
+        $this->assertEquals('Every 15 minutes, at 10:00 and 23:00',
+            $this->create24HoursExpressionDescriptor('0,15,30,45 10,23 * 1,2,3,4,5,6,7,8,9,10,11,12 1,2,3,4,5,6,0')
                 ->getDescription());
 
         $this->assertEquals('Every 15 minutes, at 10:00 and 23:00',
-            (new ExpressionDescriptor('0,15,30,45 10,23 * 1,2,3,4,5,6,7,8,9,10,11,12 1,2,3,4,5,6,0',
-                'en_US', true))->getDescription());
+            $this->create24HoursExpressionDescriptor('0,15,30,45 10,23 * 1,2,3,4,5,6,7,8,9,10,11,12 1,2,3,4,5,6,0')
+                ->getDescription());
+
+        $this->assertEquals('At 22:45',
+            $this->create24HoursExpressionDescriptor('45 22 * * *')
+                ->getDescription());
+
+        $this->assertEquals('À 22:45',
+            $this->create24HoursExpressionDescriptor('45 22 * * *', 'fr')
+                ->getDescription());
+    }
+
+    private function create24HoursExpressionDescriptor(string $expression, string $language = 'en_US'): ExpressionDescriptor
+    {
+        return new ExpressionDescriptor($expression, $language, true);
     }
 }
