@@ -76,16 +76,23 @@ class ExpressionDescriptor
     /**
      * ExpressionDescriptor constructor.
      *
-     * @param string $expression
+     * @param ExpressionParser|array|string $expression
      * @param string $locale
      * @param bool   $isUse24HourTimeFormat
      * @param bool   $fallback
      *
      * @throws ExpressionException
      */
-    public function __construct(string $expression, string $locale = 'en_US', bool $isUse24HourTimeFormat = false, bool $fallback = true)
+    public function __construct($expression, string $locale = 'en_US', bool $isUse24HourTimeFormat = false, bool $fallback = true)
     {
-        [$second, $minute, $hour, $day, $month, $week, $year] = (new ExpressionParser($expression))->parse();
+        if ($expression instanceof ExpressionParser) {
+            [$second, $minute, $hour, $day, $month, $week, $year] = $expression->parse();
+        } elseif (is_array($expression)) {
+            [$second, $minute, $hour, $day, $month, $week, $year] = $expression;
+        } else {
+            [$second, $minute, $hour, $day, $month, $week, $year] = (new ExpressionParser((string)$expression))->parse();
+        }
+
         $this->expression = compact('second', 'minute', 'hour', 'day', 'month', 'week', 'year');
         $this->isUse24HourTimeFormat = $isUse24HourTimeFormat;
 
