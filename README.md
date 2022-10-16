@@ -34,7 +34,7 @@ Ports
 
 This library has been ported to several other languages.
 
- - C# - [https://github.com/bradymholt/cron-expression-descriptor](https://github.com/bradymholt/cron-expression-descriptor]
+ - C# - [https://github.com/bradymholt/cron-expression-descriptor](https://github.com/bradymholt/cron-expression-descriptor)
  - JavaScript - [https://github.com/bradymholt/cRonstrue](https://github.com/bradymholt/cRonstrue)
  - Java - [https://github.com/RedHogs/cron-parser](https://github.com/RedHogs/cron-parser)
  - Java - [https://github.com/voidburn/cron-expression-descriptor](https://github.com/voidburn/cron-expression-descriptor)
