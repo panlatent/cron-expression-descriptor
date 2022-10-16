@@ -29,6 +29,19 @@ echo (new Panlatent\CronExpressionDescriptor\ExpressionDescriptor('23 12 * JAN *
 // OUTPUT: At 12:23 PM, only in January
 ```
 
+Ports
+------
+
+This library has been ported to several other languages.
+
+ - C# - [https://github.com/bradymholt/cron-expression-descriptor](https://github.com/bradymholt/cron-expression-descriptor]
+ - JavaScript - [https://github.com/bradymholt/cRonstrue](https://github.com/bradymholt/cRonstrue)
+ - Java - [https://github.com/RedHogs/cron-parser](https://github.com/RedHogs/cron-parser)
+ - Java - [https://github.com/voidburn/cron-expression-descriptor](https://github.com/voidburn/cron-expression-descriptor)
+ - Ruby - [https://github.com/alpinweis/cronex](https://github.com/alpinweis/cronex)
+ - Python - [https://github.com/Salamek/cron-descriptor](https://github.com/Salamek/cron-descriptor)
+ - Go - [https://github.com/lnquy/cron](https://github.com/lnquy/cron)
+ 
 License
 -------
 The Cron Expression Descriptor is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
