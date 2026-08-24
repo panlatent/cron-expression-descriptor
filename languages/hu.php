@@ -1,0 +1,57 @@
+<?php
+/**
+ * Cron Expression Descriptor
+ *
+ * @link      https://github.com/panlatent/cron-expression-descriptor
+ * @copyright Copyright (c) 2019 panlatent@gmail.com
+ */
+
+return [
+    'EveryMinute' => 'percenként',
+    'EveryHour' => 'óránként',
+    'AnErrorOccuredWhenGeneratingTheExpressionD' => 'Hiba történt a kifejezés leírásának létrehozása során. Ellenőrizze a cron-kifejezés szintaxisát.',
+    'AtSpace' => 'pontban ',
+    'EveryMinuteBetween{0}And{1}' => '{0} és {1} közötti minden percben',
+    'At' => 'pontban',
+    'SpaceAnd' => ' és',
+    'EverySecond' => 'másodpercenként',
+    'Every{0}Seconds' => 'minden {0} másodpercenként',
+    'Seconds{0}Through{1}PastTheMinute' => 'a perc {0} másodpercétől {1} másodpercig',
+    'At{0}SecondsPastTheMinute' => '{0} másodperccel a perc után',
+    'Every{0}Minutes' => 'minden {0} percben',
+    'Minutes{0}Through{1}PastTheHour' => 'az óra {0} percétől {1} percig',
+    'At{0}MinutesPastTheHour' => '{0} perccel az óra után',
+    'Every{0}Hours' => 'minden {0} órában',
+    'Between{0}And{1}' => '{0} és {1} között',
+    'At{0}' => 'pontban {0}',
+    'ComaEveryDay' => ', minden nap',
+    'ComaEvery{0}DaysOfTheWeek' => ', a hét minden {0} napján',
+    'Coma{0}Through{1}' => ', {0} – {1}',
+    'First' => 'első',
+    'Second' => 'második',
+    'Third' => 'harmadik',
+    'Fourth' => 'negyedik',
+    'Fifth' => 'ötödik',
+    'ComaOnThe' => ', a ',
+    'Space{0}OfTheMonth' => ' a hónap {0}',
+    'ComaOnTheLast{0}OfTheMonth' => ', a hónap utolsó {0}',
+    'ComaOnlyOn{0}' => ', csak {0}',
+    'ComaEvery{0}Months' => ', minden {0} hónapban',
+    'ComaOnlyIn{0}' => ', csak {0}',
+    'ComaOnTheLastDayOfTheMonth' => ', a hónap utolsó napján',
+    'ComaOnTheLastWeekdayOfTheMonth' => ', a hónap utolsó munkanapján',
+    'FirstWeekday' => 'az első munkanapon',
+    'WeekdayNearestDay{0}' => 'a {0}hoz legközelebbi hétköznap',
+    'ComaOnThe{0}OfTheMonth' => ', a hónap {0} ',
+    'ComaEvery{0}Days' => ', minden {0} nap',
+    'ComaBetweenDay{0}And{1}OfTheMonth' => ', a hónap {0} és {1} napja között',
+    'ComaOnDay{0}OfTheMonth' => ', a hónap {0} napján',
+    'SpaceAndSpace' => ' és ',
+    'ComaEveryMinute' => ', minden percben',
+    'ComaEveryHour' => ', óránként',
+    'ComaEvery{0}Years' => ', minden {0} évben',
+    'CommaStarting{0}' => ', kezdve {0}-tól',
+    'AMPeriod' => 'DE',
+    'PMPeriod' => 'DU',
+    'CommaDaysBeforeTheLastDayOfTheMonth' => ', {0} nappal a hónap utolsó napja előtt',
+];
